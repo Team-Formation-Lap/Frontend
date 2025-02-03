@@ -5,7 +5,7 @@ import Robot from "../assets/Robot.svg";
 
 const StartPage = () => {
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-blue-400 to-purple-600 text-white">
+    <div className="flex flex-col h-screen ">
       {/* 헤더 */}
       <header className="flex items-center justify-between px-8 py-4 bg-white shadow-md">
         <h1 className="text-3xl font-bold font-museo bg-gradient-to-b from-[#AAA0FF] via-[#4C40B5] to-[#2A1E95] text-transparent bg-clip-text">
@@ -25,14 +25,14 @@ const StartPage = () => {
       <main className="flex flex-1 items-center justify-center px-16">
         {/* 좌측 텍스트 & 버튼 */}
         <div className="w-1/2 space-y-4">
-          <p className="text-3xl font-museo ">
+          <p className="text-3xl font-museo text-gray-700 font-semibold">
             내가 주인공인 순간, 시작은 여기에서!
           </p>
-          <h2 className="text-5xl font-museo font-bold leading-tight text-white tracking-normal">
+          <h2 className="text-5xl font-museo font-bold tracking-normal leading-[1.5]">
             맞춤형 피드백과 <br /> 전문적인 분석으로 <br /> 나만의 이야기를
             완성하는
           </h2>
-          <h2 className="text-5xl font-museo font-bold text-indigo-300 tracking-wide">
+          <h2 className="text-5xl font-museo font-bold bg-gradient-to-b from-[#312594] via-[#4F41CE] to-[#8072F8] text-transparent bg-clip-text tracking-wide">
             AI 모의면접 서비스
           </h2>
           <button className="px-8 py-3 mt-4 font-museo text-lg font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 tracking-widest">
@@ -42,6 +42,9 @@ const StartPage = () => {
 
         {/* 우측 이미지 */}
         <div className="relative w-1/2 h-[500px]">
+          {/* 보라색 모형 */}
+          <div className="absolute w-[810px] h-[380px] bg-gradient-to-b from-[#6859ED] to-[#FF94D6] rounded-l-full top-16 right-[-60px] opacity-80 z-0"></div>
+
           {/* 책 */}
           <img
             src={book}
