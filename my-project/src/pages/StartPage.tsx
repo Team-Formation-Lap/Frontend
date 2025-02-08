@@ -2,25 +2,12 @@ import book from "../assets/book.svg";
 import flyingBusinessman from "../assets/flyingBusinessman.svg";
 import flyingBusinesswoman from "../assets/flyingBusinesswoman.svg";
 import Robot from "../assets/Robot.svg";
-
+import Myheader from "../components/header";
 const StartPage = () => {
   return (
     <div className="flex flex-col h-screen ">
       {/* 헤더 */}
-      <header className="flex items-center justify-between px-8 py-4 bg-white shadow-md">
-        <h1 className="text-3xl font-bold font-museo bg-gradient-to-b from-[#AAA0FF] via-[#4C40B5] to-[#2A1E95] text-transparent bg-clip-text">
-          IntelliView
-        </h1>
-        <div className="flex space-x-4">
-          <button className="px-4 py-2 text-gray-700 border rounded-md hover:bg-gray-100">
-            로그인
-          </button>
-          <button className="px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
-            회원가입
-          </button>
-        </div>
-      </header>
-
+      <Myheader />
       {/* 메인 컨텐츠 */}
       <main className="flex flex-1 items-center justify-center px-16">
         {/* 좌측 텍스트 & 버튼 */}
@@ -35,7 +22,8 @@ const StartPage = () => {
           <h2 className="text-5xl font-museo font-bold bg-gradient-to-b from-[#312594] via-[#4F41CE] to-[#8072F8] text-transparent bg-clip-text tracking-wide">
             AI 모의면접 서비스
           </h2>
-          <button className="px-8 py-3 mt-4 font-museo text-lg font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 tracking-widest">
+
+          <button className="px-8 py-3 font-museo text-lg font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 tracking-widest relative top-4">
             면접 시작하기
           </button>
         </div>
