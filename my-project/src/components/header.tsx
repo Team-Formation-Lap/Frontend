@@ -1,4 +1,4 @@
-const header = () => {
+const Header = () => {
   return (
     <div>
       {/* 헤더 */}
@@ -19,4 +19,4 @@ const header = () => {
   );
 };
 
-export default header;
+export default Header;
