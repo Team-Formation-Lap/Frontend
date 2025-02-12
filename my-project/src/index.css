@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.modal-btn {
+/* .modal-btn {
   @apply block mx-auto my-10 px-5 py-2 text-white rounded-md cursor-pointer transition-shadow hover:shadow-md;
 }
 
@@ -16,4 +16,4 @@
 
 .close-btn {
   @apply block px-5 py-2 bg-red-800 text-white rounded-md cursor-pointer transition-shadow hover:shadow-md;
-}
+} */
