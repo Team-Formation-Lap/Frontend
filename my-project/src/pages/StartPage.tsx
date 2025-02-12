@@ -1,15 +1,13 @@
-import { useState } from "react";
-import ResumeUploadModal from "../components/modals/ResumeUploadModal";
 import book from "../assets/book.svg";
 import flyingBusinessman from "../assets/flyingBusinessman.svg";
 import flyingBusinesswoman from "../assets/flyingBusinesswoman.svg";
 import Robot from "../assets/Robot.svg";
 import Header from "../components/Header";
 import "../index.css";
-
-const StartPage = () => {
-  const [open, setOpen] = useState(false);
-
+interface StartPageProps {
+  openUploadingModal: () => void; // 이력서 업로드 모달 열기 핸들러
+}
+const StartPage = ({ openUploadingModal }: StartPageProps) => {
   return (
     <div className="flex flex-col h-screen ">
       {/* 헤더 */}
@@ -30,16 +28,16 @@ const StartPage = () => {
           </h2>
 
           <button
-            onClick={() => setOpen(true)}
             className="px-8 py-3 font-museo text-lg font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 tracking-widest relative top-4"
+            onClick={() => {
+              console.log("모달 열기 버튼 클릭됨");
+              openUploadingModal();
+            }}
           >
             면접 시작하기
           </button>
         </div>
-        <ResumeUploadModal
-          isOpen={open}
-          onClose={() => setOpen(false)}
-        ></ResumeUploadModal>
+
         {/* 우측 이미지 */}
         <div className="relative w-1/2 h-[500px]">
           {/* 보라색 모형 */}
