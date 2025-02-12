@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react"; // 뒤로가기 아이콘
 import Record from "../assets/Record.svg"; // 녹화 아이콘 경로
+import { useNavigate } from "react-router-dom"; // 페이지 이동용
 
 const InterviewHeader = () => {
   const [timer, setTimer] = useState(0); // 타이머 상태
@@ -22,13 +23,18 @@ const InterviewHeader = () => {
     const secs = (seconds % 60).toString().padStart(2, "0");
     return `${minutes}:${secs}`;
   };
+  const navigate = useNavigate(); // navigate 훅 사용
+  const handleMainPageClick = () => {
+    console.log("메인페이지로 이동");
 
+    navigate("/"); // state에 memberId 전달
+  };
   return (
     <header className="flex items-center justify-between px-4 py-4 bg-gray-400 bg-opacity-20 backdrop-blur-md shadow-sm fixed top-0 w-full z-10">
       {/* 돌아가기 버튼 */}
       <button
         className="flex items-center text-white text-m font-medium px-5 py-2  bg-gray-300 bg-opacity-60 rounded-md hover:bg-gray-200 transition ml-2"
-        onClick={() => window.history.back()}
+        onClick={() => handleMainPageClick()} // 클릭 이벤트 핸들러
       >
         <ArrowLeft className="w-6 h-6 mr-1" />
         메인으로
