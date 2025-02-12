@@ -25,62 +25,18 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   return (
     // 모달 배경 (회색 반투명 레이어)
     <div
-      className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-[9999]"
+      className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-[9999]"
       onClick={handleBackgroundClick} // 배경 클릭 핸들러 설정
     >
       {/* 모달 콘텐츠 */}
       <div
-        className="bg-white p-8 rounded w-96 text-center"
+        className="bg-white p-8 rounded-lg w-120 h-120 text-center"
         onClick={(e) => e.stopPropagation()} // 클릭 이벤트 전파 중단 (배경 클릭과 구분)
       >
         {children} {/* 모달 내부에 렌더링될 콘텐츠 */}
       </div>
     </div>
   );
-
-  //   return (
-  //     <div
-  //       style={{
-  //         position: "fixed",
-  //         top: "0",
-  //         left: "0",
-  //         width: "100vw",
-  //         height: "100vh",
-  //         backgroundColor: "rgba(0, 0, 0, 0.8)",
-  //         zIndex: 9999,
-  //         display: "flex",
-  //         justifyContent: "center",
-  //         alignItems: "center",
-  //       }}
-  //       onClick={handleBackgroundClick}
-  //     >
-  //       <div
-  //         style={{
-  //           backgroundColor: "white",
-  //           padding: "20px",
-  //           border: "5px solid red", // 테두리 강조
-  //           zIndex: 10000,
-  //         }}
-  //         onClick={(e) => e.stopPropagation()}
-  //       >
-  //         안녕하세요 이력서 업로드 모달입니다.
-  //       </div>
-  //     </div>
-  //   );
-
-  // return (
-  //   <div
-  //     className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
-  //     onClick={handleBackgroundClick}
-  //   >
-  //     <div
-  //       className="bg-white p-8 rounded-lg shadow-2xl border-4 border-red-500"
-  //       onClick={(e) => e.stopPropagation()}
-  //     >
-  //       안녕하세요 이력서 업로드 모달입니다.
-  //     </div>
-  //   </div>
-  // );
 };
 
 export default Modal;
