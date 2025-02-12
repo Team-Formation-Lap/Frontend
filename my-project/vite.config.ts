@@ -11,4 +11,14 @@ export default defineConfig({
       plugins: [tailwindcss(), autoprefixer],
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://api.d-id.com",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
 });

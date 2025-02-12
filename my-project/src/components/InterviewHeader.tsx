@@ -24,10 +24,10 @@ const InterviewHeader = () => {
   };
 
   return (
-    <header className="flex items-center justify-between px-4 py-4 bg-gray-400 bg-opacity-100 backdrop-blur-md shadow-sm fixed top-0 w-full z-10">
+    <header className="flex items-center justify-between px-4 py-4 bg-gray-400 bg-opacity-20 backdrop-blur-md shadow-sm fixed top-0 w-full z-10">
       {/* 돌아가기 버튼 */}
       <button
-        className="flex items-center text-white text-m font-medium px-5 py-2  bg-gray-300 bg-opacity-100 rounded-md hover:bg-gray-200 transition ml-2"
+        className="flex items-center text-white text-m font-medium px-5 py-2  bg-gray-300 bg-opacity-60 rounded-md hover:bg-gray-200 transition ml-2"
         onClick={() => window.history.back()}
       >
         <ArrowLeft className="w-6 h-6 mr-1" />
