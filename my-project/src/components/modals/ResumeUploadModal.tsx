@@ -14,7 +14,9 @@ const ResumeUploadModal = ({ isOpen, onClose }: Props) => {
     // <div onClick={onClose} className="modal-overlay">
     <div onClick={onClose}>
       <div onClick={(e) => e.stopPropagation()} className="modal">
-        <button onClick={onClose} className="modal-close"></button>
+        <button onClick={onClose} className="modal-close">
+          닫기
+        </button>
         {/* children */}
         <div>
           <p>이 항목을 삭제하시겠습니까?</p>
