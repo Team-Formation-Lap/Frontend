@@ -30,9 +30,16 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     >
       {/* 모달 콘텐츠 */}
       <div
-        className="bg-white p-8 rounded-lg w-120 h-120 text-center"
+        className="bg-white p-8 rounded-3xl w-120 h-120 text-center relative"
         onClick={(e) => e.stopPropagation()} // 클릭 이벤트 전파 중단 (배경 클릭과 구분)
       >
+        {/* 닫기 버튼 */}
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-4  text-gray-400 hover:text-gray-600 text-2xl"
+        >
+          &times;
+        </button>
         {children} {/* 모달 내부에 렌더링될 콘텐츠 */}
       </div>
     </div>

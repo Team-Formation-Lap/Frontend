@@ -1,5 +1,3 @@
-// import { useState } from "react";
-// import ResumeUploadModal from "../components/modals/ResumeUploadModal";
 import book from "../assets/book.svg";
 import flyingBusinessman from "../assets/flyingBusinessman.svg";
 import flyingBusinesswoman from "../assets/flyingBusinesswoman.svg";
