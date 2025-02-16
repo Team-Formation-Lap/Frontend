@@ -30,7 +30,7 @@ const ReportPage = () => {
       {/* 헤더 */}
       <Header_login />
       {/* 네비게이션 바 */}
-      <div className="mx-10 mt-4 bg-[#5A55D9] text-white rounded-t-lg flex justify-between items-center">
+      <div className="mx-14 mt-4 bg-[#5A55D9] text-white rounded-t-lg flex justify-between items-center">
         {/* 탭 메뉴 */}
         <div className="flex ">
           <button
@@ -64,14 +64,16 @@ const ReportPage = () => {
         {/* 날짜 및 PDF 저장 버튼 */}
         <div className="flex items-center space-x-8">
           <span>{dummyDate}</span>
-          <button className="flex items-center px-4 py-2 border border-dashed border-white rounded-lg hover:bg-white hover:text-[#4C40B5] relative left-[-10px]">
+          <button className="flex items-center px-4 py-1 border border-dashed border-white hover:bg-white hover:text-[#4C40B5] relative left-[-10px]">
             <FaFilePdf className="mr-2" />
             PDF 문서 저장하기
           </button>
         </div>
       </div>
       {/* 렌더링 영역 */}
-      <div className="p-5">{renderContent()}</div>
+      <div className="mx-14 mt-0 bg-gray-100 rounded-b-lg p-6">
+        {renderContent()}
+      </div>
     </div>
   );
 };
