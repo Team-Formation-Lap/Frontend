@@ -18,8 +18,22 @@ const InterviewPage = () => {
     };
 
     ws.onmessage = (event) => {
-      console.log("서버로부터 메시지 수신:", event.data);
-      setMessages((prevMessages) => [...prevMessages, event.data]); // 메시지 저장
+      console.log("서버로부터 원본 메시지 수신:", event.data);
+
+      try {
+        const data = JSON.parse(event.data);
+
+        // 🚀 유니코드 문자열을 정상적인 한글로 변환
+        const decodedMessage = data.message.replace(
+          /\\u([\dA-Fa-f]{4})/g,
+          (_: string, group: string) => String.fromCharCode(parseInt(group, 16))
+        );
+
+        console.log("디코딩된 메시지:", decodedMessage);
+        setMessages((prev) => [...prev, decodedMessage]);
+      } catch (error) {
+        console.error("JSON 파싱 또는 디코딩 오류:", error);
+      }
     };
 
     ws.onclose = () => {
