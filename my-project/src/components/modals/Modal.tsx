@@ -9,8 +9,6 @@ interface ModalProps {
 
 // Modal 컴포넌트 정의
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  console.log("Modal 렌더링 상태:", isOpen); // 추가된 로그
-  // 모달이 열리지 않은 경우(null 반환으로 렌더링하지 않음)
   if (!isOpen) {
     return null;
   }
