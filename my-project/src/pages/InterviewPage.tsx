@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import InterviewHeader from "../components/InterviewHeader";
 import "../index.css";
 import WebcamFeed from "../components/WebcamFeed";
@@ -6,7 +6,11 @@ import VirtualInterviewer from "../components/VirtualInterviewer";
 
 const InterviewPage = () => {
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [messages, setMessages] = useState<string[]>([]); // 서버 메시지 저장
+  const [messages, setMessages] = useState<string[]>([]);
+  const [recording, setRecording] = useState(false); // 녹음 상태 관리
+
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
 
   useEffect(() => {
     // 웹소켓 서버 연결
@@ -22,8 +26,6 @@ const InterviewPage = () => {
 
       try {
         const data = JSON.parse(event.data);
-
-        // 🚀 유니코드 문자열을 정상적인 한글로 변환
         const decodedMessage = data.message.replace(
           /\\u([\dA-Fa-f]{4})/g,
           (_: string, group: string) => String.fromCharCode(parseInt(group, 16))
@@ -44,17 +46,61 @@ const InterviewPage = () => {
       console.error("웹소켓 오류 발생:", error);
     };
 
-    setSocket(ws); // 웹소켓을 상태로 저장
+    setSocket(ws);
 
     return () => {
-      ws.close(); // 페이지가 언마운트되면 웹소켓 종료
+      ws.close(); // 페이지 언마운트 시 웹소켓 종료
     };
   }, []);
 
-  // 서버에 메시지 전송하는 함수
-  const sendMessage = (msg: string) => {
+  // 🎤 음성 녹음 시작
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.start();
+      mediaRecorderRef.current = mediaRecorder;
+      setRecording(true);
+      console.log("녹음 시작!");
+    } catch (error) {
+      console.error("마이크 접근 실패:", error);
+    }
+  };
+
+  // ⏹ 녹음 종료 및 서버로 전송
+  const stopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: "audio/webm",
+        });
+        sendAudio(audioBlob);
+        audioChunksRef.current = []; // 녹음 데이터 초기화
+      };
+      setRecording(false);
+      console.log("녹음 종료 및 서버로 전송");
+    }
+  };
+
+  // 📤 웹소켓을 통해 서버로 음성 데이터 전송 (웹소켓 종료 없이)
+  const sendAudio = (audioBlob: Blob) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({ type: "chat", message: msg }));
+      // 음성 데이터를 Base64로 변환 후 서버에 전송
+      const reader = new FileReader();
+      reader.readAsDataURL(audioBlob);
+      reader.onloadend = () => {
+        const base64Audio = reader.result;
+        socket.send(JSON.stringify({ type: "audio", audio: base64Audio }));
+        console.log("음성 메시지 서버로 전송 완료!");
+      };
     } else {
       console.error("웹소켓이 연결되지 않았습니다.");
     }
@@ -108,7 +154,7 @@ const InterviewPage = () => {
           <InterviewHeader />
         </div>
 
-        {/* 웹소켓 메시지 표시 */}
+        {/* 웹소켓 메시지 표시 & 녹음 버튼 추가 */}
         <div
           style={{
             position: "fixed",
@@ -127,20 +173,41 @@ const InterviewPage = () => {
               <li key={index}>{msg}</li>
             ))}
           </ul>
-          <button
-            onClick={() => sendMessage("안녕하세요, 서버!")}
-            style={{
-              marginTop: "10px",
-              padding: "5px 10px",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            서버에 메시지 보내기
-          </button>
+
+          {/* 🎤 녹음 버튼 */}
+          {!recording ? (
+            <button
+              onClick={startRecording}
+              style={{
+                marginTop: "10px",
+                padding: "10px 15px",
+                backgroundColor: "#28a745",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                fontSize: "16px",
+              }}
+            >
+              🎤 답변하기
+            </button>
+          ) : (
+            <button
+              onClick={stopRecording}
+              style={{
+                marginTop: "10px",
+                padding: "10px 15px",
+                backgroundColor: "#dc3545",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                fontSize: "16px",
+              }}
+            >
+              ⏹ 답변마치기
+            </button>
+          )}
         </div>
       </div>
     </div>
