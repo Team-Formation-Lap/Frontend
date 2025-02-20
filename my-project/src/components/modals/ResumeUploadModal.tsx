@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import Modal from "./Modal";
 import Man from "../../assets/Man.svg";
+import { useNavigate } from "react-router-dom"; // 페이지 이동용
 
 interface ResumeUploadModalProps {
   isOpen: boolean;
@@ -12,7 +13,12 @@ interface ResumeUploadModalProps {
 const ResumeUploadModal = ({ isOpen, onClose }: ResumeUploadModalProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-
+  const navigate = useNavigate(); // navigate 훅 사용
+  const handleStartInterviewClick = () => {
+    console.log("면접페이지로 이동");
+    onClose();
+    navigate("/interview"); // state에 memberId 전달
+  };
   // 파일 선택 핸들러
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -98,6 +104,13 @@ const ResumeUploadModal = ({ isOpen, onClose }: ResumeUploadModalProps) => {
             disabled={uploading}
           >
             {uploading ? "업로드 중..." : "이력서 업로드"}
+          </button>
+          <button
+            className="bg-indigo-600 rounded-md hover:bg-indigo-700 tracking-widest mt-2 text-white text-semibold px-8 py-3 transition"
+            onClick={() => handleStartInterviewClick()} // 클릭 이벤트 핸들러
+            disabled={uploading}
+          >
+            면접시작{" "}
           </button>
         </div>
       </div>
