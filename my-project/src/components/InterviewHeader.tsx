@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react"; // 뒤로가기 아이콘
 import Record from "../assets/Record.svg"; // 녹화 아이콘 경로
 import { useNavigate } from "react-router-dom"; // 페이지 이동용
-
-const InterviewHeader = () => {
+interface InterviewHeaderProps {
+  socket: WebSocket | null; // 웹소켓을 부모(InterviewPage)에서 전달받음
+}
+const InterviewHeader = ({ socket }: InterviewHeaderProps) => {
   const [timer, setTimer] = useState(0); // 타이머 상태
 
   // 타이머 증가 로직
@@ -29,6 +31,17 @@ const InterviewHeader = () => {
 
     navigate("/"); // state에 memberId 전달
   };
+  // ✅ 면접 종료 (웹소켓 종료 & 결과 페이지 이동)
+  const handleEndInterview = () => {
+    console.log("면접 종료, 웹소켓 연결 닫기");
+
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.close(); // 웹소켓 종료
+      console.log("웹소켓 연결 종료됨.");
+    }
+
+    navigate("/report"); // 결과 페이지로 이동
+  };
   return (
     <header className="flex items-center justify-between px-4 py-4 bg-gray-400 bg-opacity-20 backdrop-blur-md shadow-sm fixed top-0 w-full z-10">
       {/* 돌아가기 버튼 */}
@@ -47,6 +60,13 @@ const InterviewHeader = () => {
           {formatTime(timer)}
         </span>
       </div>
+      {/* ✅ 면접 종료 버튼 (오른쪽에 추가) */}
+      <button
+        className="flex items-center text-white text-m font-medium px-5 py-2 bg-red-500 bg-opacity-80 rounded-md hover:bg-red-600 transition ml-2"
+        onClick={handleEndInterview}
+      >
+        면접 종료
+      </button>
     </header>
   );
 };
