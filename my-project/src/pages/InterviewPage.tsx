@@ -1,16 +1,28 @@
 import { useEffect, useState, useRef } from "react";
 import InterviewHeader from "../components/InterviewHeader";
 import "../index.css";
+import { useLocation } from "react-router-dom"; // interview_id 가져오기
+
 import WebcamFeed from "../components/WebcamFeed";
 import VirtualInterviewer from "../components/VirtualInterviewer";
 
 const InterviewPage = () => {
+  const location = useLocation();
+  const interviewId = location.state?.interviewId || null; // 전달된 interview_id 가져오기
+  console.log("면접 ID:", interviewId);
+
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<string[]>([]);
   const [recording, setRecording] = useState(false); // 녹음 상태 관리
-
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  // 🎥 영상 녹화 관련 변수 추가
+  const [, setVideoRecording] = useState(false);
+  const videoMediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const videoChunksRef = useRef<Blob[]>([]);
+  useEffect(() => {
+    startVideoRecording(); // 페이지 진입 시 자동 영상 녹화 시작
+  }, []);
 
   useEffect(() => {
     // 웹소켓 서버 연결
@@ -105,6 +117,43 @@ const InterviewPage = () => {
       console.error("웹소켓이 연결되지 않았습니다.");
     }
   };
+  // 🎥 영상 녹화 시작 함수
+  const startVideoRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: "video/webm",
+      });
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          videoChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.start();
+      videoMediaRecorderRef.current = mediaRecorder;
+      setVideoRecording(true);
+      console.log("🎥 영상 녹화 시작!");
+    } catch (error) {
+      console.error("🎥 영상 녹화 시작 실패:", error);
+    }
+  };
+
+  // 🎥 영상 녹화 중지 함수
+  const stopVideoRecording = () => {
+    if (videoMediaRecorderRef.current) {
+      videoMediaRecorderRef.current.stop();
+      videoMediaRecorderRef.current.onstop = () => {
+        console.log("🎥 녹화 종료됨, 파일 저장 준비");
+      };
+      setVideoRecording(false);
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen">
@@ -151,7 +200,12 @@ const InterviewPage = () => {
             zIndex: 1000,
           }}
         >
-          <InterviewHeader socket={socket} />
+          <InterviewHeader
+            interviewId={interviewId}
+            stopVideoRecording={stopVideoRecording} // 면접 종료 시 영상 녹화도 중지
+            socket={socket} // 웹소켓 연결 정보 전달
+            videoChunksRef={videoChunksRef} // ✅ 녹화된 영상 데이터 전달
+          />
         </div>
 
         {/* 웹소켓 메시지 표시 & 녹음 버튼 추가 */}
