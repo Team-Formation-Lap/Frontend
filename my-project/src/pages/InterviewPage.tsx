@@ -1,10 +1,15 @@
 import { useEffect, useState, useRef } from "react";
 import InterviewHeader from "../components/InterviewHeader";
 import "../index.css";
+import { useLocation } from "react-router-dom"; // interview_id 가져오기
+
 import WebcamFeed from "../components/WebcamFeed";
 import VirtualInterviewer from "../components/VirtualInterviewer";
 
 const InterviewPage = () => {
+  const location = useLocation();
+  const interviewId = location.state?.interviewId || null; // 전달된 interview_id 가져오기
+  console.log("면접 ID:", interviewId);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<string[]>([]);
   const [recording, setRecording] = useState(false); // 녹음 상태 관리

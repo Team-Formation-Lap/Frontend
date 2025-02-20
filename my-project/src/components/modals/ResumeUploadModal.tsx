@@ -33,7 +33,7 @@ const ResumeUploadModal = ({ isOpen, onClose }: ResumeUploadModalProps) => {
 
         // 면접 페이지로 이동
         onClose();
-        navigate("/interview");
+        navigate(`/interview`, { state: { interviewId } });
       } else {
         console.error("면접 시작 실패!", response);
       }
