@@ -14,11 +14,34 @@ const ResumeUploadModal = ({ isOpen, onClose }: ResumeUploadModalProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate(); // navigate 훅 사용
-  const handleStartInterviewClick = () => {
+  const handleStartInterviewClick = async () => {
     console.log("면접페이지로 이동");
-    onClose();
-    navigate("/interview"); // state에 memberId 전달
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/apps/start",
+        {
+          user_id: 1,
+          question_count: 3,
+        }
+      );
+
+      if (response.status === 201) {
+        console.log("서버 응답:", response.data.message); // 서버 응답 메시지 출력
+        console.log("면접 ID:", response.data.interview_id);
+        console.log("질문 개수:", response.data.questions_count);
+
+        // 면접 페이지로 이동
+        onClose();
+        navigate("/interview");
+      } else {
+        console.error("면접 시작 실패!", response);
+      }
+    } catch (error) {
+      console.error("면접 시작 중 오류 발생:", error);
+    }
   };
+
   // 파일 선택 핸들러
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
