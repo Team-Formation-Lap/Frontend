@@ -6,7 +6,7 @@ import Man from "../../assets/Man.svg";
 interface ResumeUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  userId: 1; // 유저 ID를 props로 받음
+  // userId: 1; // 유저 ID를 props로 받음
 }
 
 const ResumeUploadModal = ({ isOpen, onClose }: ResumeUploadModalProps) => {
