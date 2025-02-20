@@ -151,7 +151,7 @@ const InterviewPage = () => {
             zIndex: 1000,
           }}
         >
-          <InterviewHeader />
+          <InterviewHeader socket={socket} />
         </div>
 
         {/* 웹소켓 메시지 표시 & 녹음 버튼 추가 */}
