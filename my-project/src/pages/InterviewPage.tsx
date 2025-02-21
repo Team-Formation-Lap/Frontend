@@ -8,7 +8,7 @@ import VirtualInterviewer from "../components/VirtualInterviewer";
 
 const InterviewPage = () => {
   const location = useLocation();
-  const interviewId = location.state?.interviewId || null; // 전달된 interview_id 가져오기
+  const interviewId = Number(location.state?.interviewId || null);
   console.log("면접 ID:", interviewId);
 
   const [socket, setSocket] = useState<WebSocket | null>(null);
@@ -27,7 +27,7 @@ const InterviewPage = () => {
   useEffect(() => {
     // 웹소켓 서버 연결
     const ws = new WebSocket(
-      "ws://localhost:8000/ws/interview/${interviewId}/"
+      `ws://localhost:8000/ws/interview/${Number(interviewId)}/`
     );
 
     ws.onopen = () => {
@@ -40,15 +40,29 @@ const InterviewPage = () => {
 
       try {
         const data = JSON.parse(event.data);
-        const decodedMessage = data.message.replace(
-          /\\u([\dA-Fa-f]{4})/g,
-          (_: string, group: string) => String.fromCharCode(parseInt(group, 16))
-        );
 
-        console.log("디코딩된 메시지:", decodedMessage);
-        setMessages((prev) => [...prev, decodedMessage]);
+        if (data.text && data.audio_url) {
+          // 🧑‍💻 GPT 질문 및 음성 URL 처리
+          console.log("🎤 GPT 질문:", data.text);
+          console.log("🔊 음성 파일 URL:", data.audio_url);
+
+          // 메시지 업데이트
+          setMessages((prev) => [...prev, data.text]);
+
+          // 음성 자동 재생
+          const audio = new Audio(data.audio_url);
+          audio
+            .play()
+            .catch((error) => console.error("🔊 음성 재생 오류:", error));
+        } else if (data.message) {
+          // 💬 일반적인 시스템 메시지 처리
+          console.log("💡 일반 메시지:", data.message);
+          setMessages((prev) => [...prev, data.message]);
+        } else {
+          console.warn("⚠️ 서버에서 알 수 없는 데이터 형식 수신:", data);
+        }
       } catch (error) {
-        console.error("JSON 파싱 또는 디코딩 오류:", error);
+        console.error("🛑 JSON 파싱 오류:", error);
       }
     };
 
