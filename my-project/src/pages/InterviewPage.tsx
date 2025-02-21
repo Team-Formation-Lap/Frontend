@@ -200,7 +200,7 @@ const InterviewPage = () => {
             position: "fixed",
             bottom: 20,
             left: 20,
-            zIndex: 9999,
+            zIndex: 99,
           }}
         >
           <WebcamFeed />
@@ -224,32 +224,43 @@ const InterviewPage = () => {
           />
         </div>
 
-        {/* 웹소켓 메시지 표시 & 녹음 버튼 추가 */}
+        {/* 웹소켓 메시지 표시 */}
+        <div
+          style={{
+            position: "fixed",
+            bottom: 20,
+            right: 120, // 버튼과 간격 조정
+            backgroundColor: "white",
+            padding: "10px",
+            borderRadius: "5px",
+            boxShadow: "0px 0px 10px rgba(0,0,0,0.1)",
+            zIndex: 100,
+            maxHeight: "200px", // 최대 높이 설정
+            overflowY: "auto", // 스크롤 가능하게 설정
+            width: "250px",
+          }}
+        >
+          <h4>질문</h4>
+          <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+            {messages.map((msg, index) => (
+              <li key={index}>{msg}</li>
+            ))}
+          </ul>
+        </div>
+
+        {/* 🎤 녹음 버튼 */}
         <div
           style={{
             position: "fixed",
             bottom: 20,
             right: 20,
-            backgroundColor: "white",
-            padding: "10px",
-            borderRadius: "5px",
-            boxShadow: "0px 0px 10px rgba(0,0,0,0.1)",
-            zIndex: 1000,
+            zIndex: 1100, // 메시지 로그보다 위에 위치
           }}
         >
-          <h4>서버 메시지 로그</h4>
-          <ul>
-            {messages.map((msg, index) => (
-              <li key={index}>{msg}</li>
-            ))}
-          </ul>
-
-          {/* 🎤 녹음 버튼 */}
           {!recording ? (
             <button
               onClick={startRecording}
               style={{
-                marginTop: "10px",
                 padding: "10px 15px",
                 backgroundColor: "#28a745",
                 color: "white",
@@ -265,7 +276,6 @@ const InterviewPage = () => {
             <button
               onClick={stopRecording}
               style={{
-                marginTop: "10px",
                 padding: "10px 15px",
                 backgroundColor: "#dc3545",
                 color: "white",
