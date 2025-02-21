@@ -126,7 +126,7 @@ const InterviewPage = () => {
       reader.readAsDataURL(audioBlob);
       reader.onloadend = () => {
         const base64Audio = reader.result;
-        socket.send(JSON.stringify({ type: "audio", audio: base64Audio }));
+        socket.send(JSON.stringify({ type: "audio", audio_url: base64Audio }));
         console.log("음성 메시지 서버로 전송 완료!");
       };
     } else {
