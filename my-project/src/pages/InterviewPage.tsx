@@ -32,7 +32,7 @@ const InterviewPage = () => {
 
     ws.onopen = () => {
       console.log("웹소켓 연결 성공!");
-      ws.send(JSON.stringify({ type: "init", message: "InterviewPage 접속" }));
+      // ws.send(JSON.stringify({ type: "init", message: "InterviewPage 접속" }));
     };
 
     ws.onmessage = (event) => {
