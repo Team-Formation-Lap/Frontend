@@ -1,10 +1,10 @@
-import InterviewerVideo from "../assets/InterviewerVideo.mp4";
+import KoreanInterviewerVideo from "../assets/KoreanInterviewerVideo.mp4";
 
 const VirtualInterviewer = () => {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <video
-        src={InterviewerVideo}
+        src={KoreanInterviewerVideo}
         autoPlay
         loop
         muted
