@@ -26,7 +26,9 @@ const InterviewPage = () => {
 
   useEffect(() => {
     // 웹소켓 서버 연결
-    const ws = new WebSocket("ws://localhost:8000/ws/gpt/");
+    const ws = new WebSocket(
+      "ws://localhost:8000/ws/interview/${interviewId}/"
+    );
 
     ws.onopen = () => {
       console.log("웹소켓 연결 성공!");
