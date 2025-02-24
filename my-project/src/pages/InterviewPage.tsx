@@ -228,26 +228,64 @@ const InterviewPage = () => {
         <div
           style={{
             position: "fixed",
-            bottom: 20,
-            right: 120, // 버튼과 간격 조정
-            backgroundColor: "white",
-            padding: "10px",
-            borderRadius: "5px",
-            boxShadow: "0px 0px 10px rgba(0,0,0,0.1)",
-            zIndex: 100,
-            maxHeight: "200px", // 최대 높이 설정
-            overflowY: "auto", // 스크롤 가능하게 설정
-            width: "250px",
+            bottom: "30px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: "rgba(0, 0, 0, 0.75)",
+            color: "white",
+            padding: "15px 20px",
+            borderRadius: "10px",
+            fontSize: "18px",
+            fontWeight: "bold",
+            textAlign: "center",
+            maxWidth: "80%",
+            lineHeight: "1.4",
+            zIndex: 1000,
+            whiteSpace: "pre-line",
+            transition: "opacity 0.8s ease-in-out",
           }}
         >
           <h4>질문</h4>
-          <ul style={{ margin: 0, padding: 0, listStyle: "none" }}>
+          <ul style={{ fontSize: "18px", color: "#aaa", margin: 0 }}>
             {messages.map((msg, index) => (
               <li key={index}>{msg}</li>
             ))}
           </ul>
         </div>
 
+        {/* 웹소켓 메시지 표시 */}
+        {/* <div
+          style={{
+            position: "fixed",
+            bottom: "30px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: "rgba(0, 0, 0, 0.75)",
+            color: "white",
+            padding: "15px 20px",
+            borderRadius: "10px",
+            fontSize: "18px",
+            fontWeight: "bold",
+            textAlign: "center",
+            maxWidth: "80%",
+            lineHeight: "1.4",
+            zIndex: 1000,
+            whiteSpace: "pre-line",
+            // opacity: visible ? 1 : 0, // 페이드인 효과
+            transition: "opacity 0.8s ease-in-out",
+          }}
+        >
+          <h4>질문</h4>
+          <p style={{ fontSize: "18px", color: "#aaa", margin: 0 }}>
+            {" "}
+            신수진 님, 귀하의 이력서를 통해 'Preview' 프로젝트에 대한 경험을
+            읽어보았습니다. 이 프로젝트에서 프론트엔드 개발자로서 디자인, 페이지
+            퍼블리싱, 그리고 API 연동 등 다양한 작업을 수행하셨는데요, 특히
+            Recharts.js 라이브러리를 사용해 데이터를 시각화했다고 하셨습니다. 이
+            부분에서 데이터 시각화를 위해 Recharts.js를 선택하신 이유와 이를
+            통해 가장 도전적이었던 부분은 무엇이었는지 말씀해 주실 수 있을까요?
+          </p>
+        </div> */}
         {/* 🎤 녹음 버튼 */}
         <div
           style={{
