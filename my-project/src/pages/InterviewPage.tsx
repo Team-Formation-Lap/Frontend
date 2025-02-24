@@ -225,67 +225,23 @@ const InterviewPage = () => {
         </div>
 
         {/* 웹소켓 메시지 표시 */}
-        <div
-          style={{
-            position: "fixed",
-            bottom: "30px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            backgroundColor: "rgba(0, 0, 0, 0.75)",
-            color: "white",
-            padding: "15px 20px",
-            borderRadius: "10px",
-            fontSize: "18px",
-            fontWeight: "bold",
-            textAlign: "center",
-            maxWidth: "80%",
-            lineHeight: "1.4",
-            zIndex: 1000,
-            whiteSpace: "pre-line",
-            transition: "opacity 0.8s ease-in-out",
-          }}
-        >
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-75 text-white px-5 py-4 rounded-lg text-lg font-bold text-center max-w-4xl leading-relaxed z-50 whitespace-pre-line transition-opacity duration-500">
           <h4>질문</h4>
           <ul style={{ fontSize: "18px", color: "#aaa", margin: 0 }}>
             {messages.map((msg, index) => (
               <li key={index}>{msg}</li>
             ))}
-          </ul>
-        </div>
-
-        {/* 웹소켓 메시지 표시 */}
-        {/* <div
-          style={{
-            position: "fixed",
-            bottom: "30px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            backgroundColor: "rgba(0, 0, 0, 0.75)",
-            color: "white",
-            padding: "15px 20px",
-            borderRadius: "10px",
-            fontSize: "18px",
-            fontWeight: "bold",
-            textAlign: "center",
-            maxWidth: "80%",
-            lineHeight: "1.4",
-            zIndex: 1000,
-            whiteSpace: "pre-line",
-            // opacity: visible ? 1 : 0, // 페이드인 효과
-            transition: "opacity 0.8s ease-in-out",
-          }}
-        >
-          <h4>질문</h4>
-          <p style={{ fontSize: "18px", color: "#aaa", margin: 0 }}>
-            {" "}
+          </ul>{" "}
+          {/* <p style={{ fontSize: "18px", color: "#aaa", margin: 0 }}>
             신수진 님, 귀하의 이력서를 통해 'Preview' 프로젝트에 대한 경험을
             읽어보았습니다. 이 프로젝트에서 프론트엔드 개발자로서 디자인, 페이지
             퍼블리싱, 그리고 API 연동 등 다양한 작업을 수행하셨는데요, 특히
             Recharts.js 라이브러리를 사용해 데이터를 시각화했다고 하셨습니다. 이
             부분에서 데이터 시각화를 위해 Recharts.js를 선택하신 이유와 이를
             통해 가장 도전적이었던 부분은 무엇이었는지 말씀해 주실 수 있을까요?
-          </p>
-        </div> */}
+          </p> */}
+        </div>
+
         {/* 🎤 녹음 버튼 */}
         <div
           style={{
@@ -298,32 +254,16 @@ const InterviewPage = () => {
           {!recording ? (
             <button
               onClick={startRecording}
-              style={{
-                padding: "10px 15px",
-                backgroundColor: "#28a745",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontSize: "16px",
-              }}
+              className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-lg font-semibold transition flex items-center gap-x-2"
             >
-              🎤 답변하기
+              🎤 <span>답변하기</span>
             </button>
           ) : (
             <button
               onClick={stopRecording}
-              style={{
-                padding: "10px 15px",
-                backgroundColor: "#dc3545",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontSize: "16px",
-              }}
+              className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-lg font-semibold transition flex items-center gap-x-2"
             >
-              ⏹ 답변마치기
+              ⏹ <span>답변마치기</span>
             </button>
           )}
         </div>
