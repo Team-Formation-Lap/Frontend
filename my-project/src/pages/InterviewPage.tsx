@@ -122,7 +122,7 @@ const InterviewPage = () => {
   const sendAudio = (audioBlob: Blob) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(audioBlob);
-      console.log("🎤 음성 메시지 Blob 데이터 서버로 전송 완료!");
+      console.log("🎤 음성 메시지 데이터 서버로 전송 완료!");
     } else {
       console.error("❌ 웹소켓이 연결되지 않았습니다.");
     }
@@ -130,13 +130,50 @@ const InterviewPage = () => {
 
   // 🎥 영상 녹화 시작 함수
   const startVideoRecording = async () => {
+    if (!navigator.mediaDevices.getDisplayMedia) {
+      console.error("❌ getDisplayMedia API가 지원되지 않는 브라우저입니다.");
+      return;
+    }
+
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      const systemStream = await navigator.mediaDevices
+        .getDisplayMedia({
+          video: true, // 🔴 화면 공유 없이 오디오만 가져오기
+          audio: true,
+        })
+        .catch((error) => {
+          if (error.name === "AbortError") {
+            console.error("❌ 사용자가 시스템 오디오 요청을 취소했습니다.");
+          } else {
+            console.error("❌ 시스템 오디오를 가져오는 중 오류 발생:", error);
+          }
+          return null; // 실패 시 null 반환
+        });
+
+      // ✅ 마이크 + 웹캠 가져오기
+      const micStream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: true,
+        audio: { echoCancellation: true, noiseSuppression: true },
       });
 
-      const mediaRecorder = new MediaRecorder(stream, {
+      if (!micStream) {
+        console.error("❌ 마이크 또는 웹캠을 가져오지 못했습니다.");
+        return;
+      }
+      if (!systemStream) {
+        console.error("❌ 시스템 오디오를 가져오지 못했습니다.");
+        return;
+      }
+
+      const combinedStream = new MediaStream([
+        ...systemStream.getAudioTracks(), // 🎧 시스템 사운드 트랙 추가
+        ...micStream.getAudioTracks(), // 🎤 마이크 트랙 추가
+      ]);
+      const finalStream = new MediaStream([
+        ...micStream.getVideoTracks(), // 웹캠 비디오 추가
+        ...combinedStream.getAudioTracks(), // 병합된 오디오 트랙 추가
+      ]);
+      const mediaRecorder = new MediaRecorder(finalStream, {
         mimeType: "video/webm",
       });
 
