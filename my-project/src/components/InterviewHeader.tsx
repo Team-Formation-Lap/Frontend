@@ -99,7 +99,7 @@ const InterviewHeader = ({
 
         if (response.status === 201) {
           console.log("✅ 면접 영상 업로드 성공!");
-          navigate("/report"); // 결과 페이지로 이동
+          navigate("/report", { state: { interviewId } });
         } else {
           console.error("❌ 업로드 실패!", response);
           setUploading(false); // 업로드 실패 시 원래 상태로 복구
