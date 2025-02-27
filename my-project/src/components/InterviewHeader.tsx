@@ -58,7 +58,6 @@ const InterviewHeader = ({
     }
 
     // 📤 녹화된 영상 가져오기
-    // 📤 녹화된 영상 가져오기
     if (!videoChunksRef.current || videoChunksRef.current.length === 0) {
       console.error("❌ 녹화된 영상이 없습니다.");
       return;
