@@ -121,18 +121,13 @@ const InterviewPage = () => {
   // 📤 웹소켓을 통해 서버로 음성 데이터 전송 (웹소켓 종료 없이)
   const sendAudio = (audioBlob: Blob) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
-      // 음성 데이터를 Base64로 변환 후 서버에 전송
-      const reader = new FileReader();
-      reader.readAsDataURL(audioBlob);
-      reader.onloadend = () => {
-        const base64Audio = reader.result;
-        socket.send(JSON.stringify({ type: "audio", audio_url: base64Audio }));
-        console.log("음성 메시지 서버로 전송 완료!");
-      };
+      socket.send(audioBlob);
+      console.log("🎤 음성 메시지 Blob 데이터 서버로 전송 완료!");
     } else {
-      console.error("웹소켓이 연결되지 않았습니다.");
+      console.error("❌ 웹소켓이 연결되지 않았습니다.");
     }
   };
+
   // 🎥 영상 녹화 시작 함수
   const startVideoRecording = async () => {
     try {
