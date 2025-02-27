@@ -22,6 +22,7 @@ const VirtualInterviewer = forwardRef((_, ref) => {
       <video
         ref={videoRef}
         src={KoreanInterviewerVideo}
+        muted // 🔇 소리 제거 (음소거)
         style={{ width: "100%", height: "100%", objectFit: "cover" }}
       />
     </div>
