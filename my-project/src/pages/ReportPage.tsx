@@ -1,25 +1,56 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Header_login from "../components/Header_login";
 import ComprehensiveReport from "../components/reports/ComprehensiveReport";
 import QuestionReport from "../components/reports/QuestionReport";
 import BehaviorReport from "../components/reports/BehaviorReport";
 import "../index.css";
 import { FaFilePdf } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 
 const ReportPage = () => {
+  const location = useLocation();
+  const interviewId = location.state?.interviewId;
+  const [reportData, setReportData] = useState({
+    comprehensiveFeedback: "",
+    questionFeedback: "",
+    behaviorFeedback: "",
+  });
   const [activeTab, setActiveTab] = useState<
     "comprehensive" | "question" | "behavior"
   >("comprehensive");
   const dummyDate = "2025년 01월 26일 21시 30분";
+  useEffect(() => {
+    if (interviewId) {
+      axios
+        .post(`http://localhost:8000/api/apps/result/${interviewId}`, {
+          user_id: 1,
+          question_count: 3,
+        })
+        .then((response) => {
+          console.log("API response:", response.data);
+          setReportData({
+            comprehensiveFeedback: response.data.feedback["종합피드백"] || "",
+            questionFeedback: response.data.feedback["답변피드백"] || "",
+            behaviorFeedback: response.data.feedback["행동피드백"] || "",
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching report data:", error);
+        });
+    }
+  }, [interviewId]);
 
   const renderContent = () => {
     switch (activeTab) {
       case "comprehensive":
-        return <ComprehensiveReport />;
+        return (
+          <ComprehensiveReport feedback={reportData.comprehensiveFeedback} />
+        );
       case "question":
-        return <QuestionReport />;
+        return <QuestionReport feedback={reportData.questionFeedback} />;
       case "behavior":
-        return <BehaviorReport />;
+        return <BehaviorReport feedback={reportData.behaviorFeedback} />;
       default:
         return null;
     }
