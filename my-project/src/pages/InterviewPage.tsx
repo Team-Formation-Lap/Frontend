@@ -15,6 +15,13 @@ const InterviewPage = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [recording, setRecording] = useState(false); // 녹음 상태 관리
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const virtualInterviewerRef = useRef<{
+    playVideo: () => void;
+    pauseVideo: () => void;
+  } | null>(null);
+  // 🔹 컴포넌트 내부에 추가
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+
   const audioChunksRef = useRef<Blob[]>([]);
   // 🎥 영상 녹화 관련 변수 추가
   const [, setVideoRecording] = useState(false);
@@ -51,9 +58,20 @@ const InterviewPage = () => {
 
           // 음성 자동 재생
           const audio = new Audio(data.audio_url);
-          audio
-            .play()
-            .catch((error) => console.error("🔊 음성 재생 오류:", error));
+          currentAudioRef.current = audio;
+
+          audio.play().then(() => {
+            if (virtualInterviewerRef.current) {
+              virtualInterviewerRef.current.playVideo();
+            }
+          });
+
+          audio.addEventListener("ended", () => {
+            if (virtualInterviewerRef.current) {
+              virtualInterviewerRef.current.pauseVideo();
+            }
+            currentAudioRef.current = null;
+          });
         } else if (data.message) {
           // 💬 일반적인 시스템 메시지 처리
           console.log("💡 일반 메시지:", data.message);
@@ -121,18 +139,13 @@ const InterviewPage = () => {
   // 📤 웹소켓을 통해 서버로 음성 데이터 전송 (웹소켓 종료 없이)
   const sendAudio = (audioBlob: Blob) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
-      // 음성 데이터를 Base64로 변환 후 서버에 전송
-      const reader = new FileReader();
-      reader.readAsDataURL(audioBlob);
-      reader.onloadend = () => {
-        const base64Audio = reader.result;
-        socket.send(JSON.stringify({ type: "audio", audio_url: base64Audio }));
-        console.log("음성 메시지 서버로 전송 완료!");
-      };
+      socket.send(audioBlob);
+      console.log("🎤 음성 메시지 데이터 서버로 전송 완료!");
     } else {
-      console.error("웹소켓이 연결되지 않았습니다.");
+      console.error("❌ 웹소켓이 연결되지 않았습니다.");
     }
   };
+
   // 🎥 영상 녹화 시작 함수
   const startVideoRecording = async () => {
     try {
@@ -191,7 +204,7 @@ const InterviewPage = () => {
             bottom: 0,
           }}
         >
-          <VirtualInterviewer />
+          <VirtualInterviewer ref={virtualInterviewerRef} />
         </div>
 
         {/* Webcam Feed */}
@@ -232,14 +245,6 @@ const InterviewPage = () => {
               <li key={index}>{msg}</li>
             ))}
           </ul>{" "}
-          {/* <p style={{ fontSize: "18px", color: "#aaa", margin: 0 }}>
-            신수진 님, 귀하의 이력서를 통해 'Preview' 프로젝트에 대한 경험을
-            읽어보았습니다. 이 프로젝트에서 프론트엔드 개발자로서 디자인, 페이지
-            퍼블리싱, 그리고 API 연동 등 다양한 작업을 수행하셨는데요, 특히
-            Recharts.js 라이브러리를 사용해 데이터를 시각화했다고 하셨습니다. 이
-            부분에서 데이터 시각화를 위해 Recharts.js를 선택하신 이유와 이를
-            통해 가장 도전적이었던 부분은 무엇이었는지 말씀해 주실 수 있을까요?
-          </p> */}
         </div>
 
         {/* 🎤 녹음 버튼 */}
