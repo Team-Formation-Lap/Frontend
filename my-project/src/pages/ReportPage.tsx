@@ -20,25 +20,43 @@ const ReportPage = () => {
     "comprehensive" | "question" | "behavior"
   >("comprehensive");
   const dummyDate = "2025년 01월 26일 21시 30분";
+
   useEffect(() => {
-    if (interviewId) {
-      axios
-        .post(`http://localhost:8000/api/apps/result/${interviewId}`, {
-          user_id: 1,
-          question_count: 3,
-        })
-        .then((response) => {
-          console.log("API response:", response.data);
-          setReportData({
-            comprehensiveFeedback: response.data.feedback["종합피드백"] || "",
-            questionFeedback: response.data.feedback["답변피드백"] || "",
-            behaviorFeedback: response.data.feedback["행동피드백"] || "",
-          });
-        })
-        .catch((error) => {
-          console.error("Error fetching report data:", error);
+    const fetchReports = async () => {
+      if (!interviewId) return;
+
+      try {
+        // 첫 번째 API 실행 (행동 데이터 분석)
+        console.log("Executing first API: Behavior analysis");
+        await axios.post(
+          `http://localhost:8000/api/apps/behavior/${interviewId}`,
+          {}
+        );
+
+        // 첫 번째 API가 성공하면 두 번째 API 실행 (결과 데이터 가져오기)
+        console.log(
+          "First API succeeded, executing second API: Fetching results"
+        );
+        const response = await axios.post(
+          `http://localhost:8000/api/apps/result/${interviewId}`,
+          {
+            user_id: 1,
+            question_count: 3,
+          }
+        );
+
+        console.log("API response:", response.data);
+        setReportData({
+          comprehensiveFeedback: response.data.feedback["종합피드백"] || "",
+          questionFeedback: response.data.feedback["답변피드백"] || "",
+          behaviorFeedback: response.data.feedback["행동피드백"] || "",
         });
-    }
+      } catch (error) {
+        console.error("Error fetching report data:", error);
+      }
+    };
+
+    fetchReports();
   }, [interviewId]);
 
   const renderContent = () => {
