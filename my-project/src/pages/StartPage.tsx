@@ -2,7 +2,7 @@ import book from "../assets/book.svg";
 import flyingBusinessman from "../assets/flyingBusinessman.svg";
 import flyingBusinesswoman from "../assets/flyingBusinesswoman.svg";
 import Robot from "../assets/Robot.svg";
-import Header_login from "../components/Header_login";
+import Header_login from "../components/headers/Header_login";
 import "../index.css";
 interface StartPageProps {
   openUploadingModal: () => void; // 이력서 업로드 모달 열기 핸들러

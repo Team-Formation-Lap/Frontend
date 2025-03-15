@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import InterviewHeader from "../components/InterviewHeader";
+import InterviewHeader from "../components/headers/InterviewHeader";
 import "../index.css";
 import { useLocation } from "react-router-dom"; // interview_id 가져오기
 
