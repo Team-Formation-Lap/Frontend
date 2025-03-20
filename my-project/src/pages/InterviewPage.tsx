@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import InterviewHeader from "../components/InterviewHeader";
+import InterviewHeader from "../components/headers/InterviewHeader";
 import "../index.css";
 import { useLocation } from "react-router-dom"; // interview_id 가져오기
 
@@ -12,7 +12,7 @@ const InterviewPage = () => {
   console.log("면접 ID:", interviewId);
 
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [messages, setMessages] = useState<string[]>([]);
+  // const [messages, setMessages] = useState<string[]>([]);
   const [recording, setRecording] = useState(false); // 녹음 상태 관리
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const virtualInterviewerRef = useRef<{
@@ -54,7 +54,7 @@ const InterviewPage = () => {
           console.log("🔊 음성 파일 URL:", data.audio_url);
 
           // 메시지 업데이트
-          setMessages((prev) => [...prev, data.text]);
+          // setMessages((prev) => [...prev, data.text]);
 
           // 음성 자동 재생
           const audio = new Audio(data.audio_url);
@@ -75,7 +75,7 @@ const InterviewPage = () => {
         } else if (data.message) {
           // 💬 일반적인 시스템 메시지 처리
           console.log("💡 일반 메시지:", data.message);
-          setMessages((prev) => [...prev, data.message]);
+          // setMessages((prev) => [...prev, data.message]);
         } else {
           console.warn("⚠️ 서버에서 알 수 없는 데이터 형식 수신:", data);
         }
@@ -238,14 +238,14 @@ const InterviewPage = () => {
         </div>
 
         {/* 웹소켓 메시지 표시 */}
-        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-75 text-white px-5 py-4 rounded-lg text-lg font-bold text-center max-w-4xl leading-relaxed z-50 whitespace-pre-line transition-opacity duration-500">
+        {/* <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-75 text-white px-5 py-4 rounded-lg text-lg font-bold text-center max-w-4xl leading-relaxed z-50 whitespace-pre-line transition-opacity duration-500">
           <h4>질문</h4>
           <ul style={{ fontSize: "18px", color: "#aaa", margin: 0 }}>
             {messages.map((msg, index) => (
               <li key={index}>{msg}</li>
             ))}
           </ul>{" "}
-        </div>
+        </div> */}
 
         {/* 🎤 녹음 버튼 */}
         <div

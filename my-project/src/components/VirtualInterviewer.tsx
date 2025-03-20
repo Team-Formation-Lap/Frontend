@@ -7,9 +7,15 @@ const VirtualInterviewer = forwardRef((_, ref) => {
   useImperativeHandle(ref, () => ({
     playVideo: () => {
       if (videoRef.current) {
-        videoRef.current.play();
+        if (videoRef.current.paused || videoRef.current.ended) {
+          console.log("Playing video...");
+          videoRef.current.play();
+        } else {
+          console.log("Video is already playing");
+        }
       }
     },
+
     pauseVideo: () => {
       if (videoRef.current) {
         videoRef.current.pause();
