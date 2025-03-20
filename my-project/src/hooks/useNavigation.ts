@@ -5,6 +5,8 @@ const useNavigation = () => {
 
   return {
     goToHome: () => navigate("/"),
+    goToInterview: (interviewId: number) =>
+      navigate("/interview", { state: { interviewId } }),
     goToMyPage: () => navigate("/mypage"),
     goToReport: () => navigate("/report"),
   };

@@ -1,8 +1,6 @@
-import { useState } from "react";
-import axios from "axios";
 import Modal from "./Modal";
-import Man from "../../assets/Man.svg";
-import { useNavigate } from "react-router-dom"; // 페이지 이동용
+import { IMAGES } from "../../utils/constants";
+import useResumeUpload from "../../hooks/useResumeUpload";
 
 interface ResumeUploadModalProps {
   isOpen: boolean;
@@ -10,89 +8,20 @@ interface ResumeUploadModalProps {
 }
 
 const ResumeUploadModal = ({ isOpen, onClose }: ResumeUploadModalProps) => {
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadCompleted, setUploadCompleted] = useState(false); // 업로드 완료 여부
-  const navigate = useNavigate();
-
-  // 파일 선택 핸들러
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setFile(event.target.files[0]);
-    }
-  };
-
-  const handleUploadResume = async () => {
-    if (!file) {
-      alert("파일을 선택해주세요.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    setUploading(true);
-
-    try {
-      const response = await axios.post(
-        `http://localhost:8000/resumes/upload/1`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      if (response.status === 201) {
-        alert("이력서가 성공적으로 업로드되었습니다!");
-        setUploadCompleted(true); // 업로드 완료 상태 변경
-      } else {
-        alert("업로드 실패! 다시 시도해주세요.");
-      }
-    } catch (error) {
-      console.error("Error uploading resume:", error);
-      alert("업로드 중 오류가 발생했습니다.");
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleStartInterviewClick = async () => {
-    if (!uploadCompleted) return; // 업로드 완료되지 않으면 실행 안 됨
-
-    console.log("면접페이지로 이동");
-
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/apps/start",
-        {
-          user_id: 1,
-          question_count: 3,
-        }
-      );
-
-      if (response.status === 201 && response.data?.interview_id) {
-        const interviewId = response.data.interview_id;
-        console.log("서버 응답:", response.data.message);
-        console.log("면접 ID:", response.data.interview_id);
-        console.log("질문 개수:", response.data.questions_count);
-
-        onClose(); // 면접 시작 시에만 모달 닫기
-        navigate("/interview", { state: { interviewId } });
-      } else {
-        console.error("❌ 면접 시작 실패! 응답 값 없음:", response);
-      }
-    } catch (error) {
-      console.error("❌ 면접 시작 API 오류:", error);
-    }
-  };
+  const {
+    file,
+    uploading,
+    uploadCompleted,
+    handleFileChange,
+    handleUploadResume,
+    handleStartInterviewClick,
+  } = useResumeUpload(onClose);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="text-center font-museo relative">
         <img
-          src={Man}
+          src={IMAGES.Man}
           alt="Avatar"
           className="w-32 h-32 mx-auto mt-5 rounded-full border-gray-300 mb-4"
         />
@@ -110,6 +39,12 @@ const ResumeUploadModal = ({ isOpen, onClose }: ResumeUploadModalProps) => {
         {/* 파일 선택 및 이력서 업로드 버튼을 같은 줄에 배치 */}
         <div className="flex justify-center gap-4 mt-4">
           {/* 파일 선택 버튼 */}
+          <input
+            type="file"
+            id="fileInput"
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+          />
           <label
             htmlFor="fileInput"
             className="bg-indigo-600 rounded-md hover:bg-indigo-700 tracking-widest text-white text-semibold px-6 py-3 transition cursor-pointer"
