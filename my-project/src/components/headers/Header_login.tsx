@@ -1,18 +1,15 @@
-import { useNavigate } from "react-router-dom"; // 페이지 이동용
+import useNavigation from "../../hooks/useNavigation";
 
 const Header_login = () => {
-  const navigate = useNavigate(); // navigate 훅 사용
-  const handleLogoClick = () => {
-    console.log("메인페이지로 이동");
-    navigate("/"); // state에 memberId 전달
-  };
+  const { goToHome } = useNavigation();
+
   return (
     <div>
       {/* 헤더 */}
       <header className="flex items-center justify-between px-8 py-4 bg-white shadow-md">
         <button
           className="text-3xl font-bold font-museo bg-gradient-to-b from-[#AAA0FF] via-[#4C40B5] to-[#2A1E95] text-transparent bg-clip-text"
-          onClick={() => handleLogoClick()} // 클릭 이벤트 핸들러
+          onClick={goToHome} // 클릭 이벤트 핸들러
         >
           IntelliView
         </button>
