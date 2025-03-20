@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react"; // 뒤로가기 아이콘
-import Record from "../../assets/Record.svg"; // 녹화 아이콘 경로
+import { IMAGES } from "../../utils/constants";
+
 import { useNavigate } from "react-router-dom"; // 페이지 이동용import axios from "axios"; // axios 추가
 import axios from "axios";
 
@@ -124,7 +125,7 @@ const InterviewHeader = ({
 
       {/* 녹화 타이머 */}
       <div className="flex-1 flex justify-center items-center">
-        <img src={Record} alt="녹화 중" className="w-5 h-5 mr-2" />
+        <img src={IMAGES.Record} alt="녹화 중" className="w-5 h-5 mr-2" />
         <span className="font-bold text-xl font-museo text-black">
           {formatTime(timer)}
         </span>
