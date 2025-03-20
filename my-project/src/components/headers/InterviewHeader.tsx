@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react"; // 뒤로가기 아이콘
-import Record from "../assets/Record.svg"; // 녹화 아이콘 경로
+import Record from "../../assets/Record.svg"; // 녹화 아이콘 경로
 import { useNavigate } from "react-router-dom"; // 페이지 이동용import axios from "axios"; // axios 추가
 import axios from "axios";
 
