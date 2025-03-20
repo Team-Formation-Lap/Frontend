@@ -1,7 +1,4 @@
-import book from "../assets/book.svg";
-import flyingBusinessman from "../assets/flyingBusinessman.svg";
-import flyingBusinesswoman from "../assets/flyingBusinesswoman.svg";
-import Robot from "../assets/Robot.svg";
+import { IMAGES } from "../utils/constants";
 import Header_login from "../components/headers/Header_login";
 import "../index.css";
 interface StartPageProps {
@@ -45,26 +42,26 @@ const StartPage = ({ openUploadingModal }: StartPageProps) => {
 
           {/* 책 */}
           <img
-            src={book}
+            src={IMAGES.book}
             alt="Book"
             className="fixed w-32 bottom-40 right-80 animate-float"
           />
           {/* 남자 */}
           <img
-            src={flyingBusinessman}
+            src={IMAGES.flyingBusinessman}
             alt="Flying Businessman"
             className="fixed w-1/3 top-60 right-96 animate-float-slow"
           />
           {/* 여자 */}
           <img
-            src={flyingBusinesswoman}
+            src={IMAGES.flyingBusinesswoman}
             alt="Flying Businesswoman"
             className="fixed w-80 bottom-40 right-0 animate-float-fast"
             style={{ right: 0 }}
           />
           {/* 로봇 */}
           <img
-            src={Robot}
+            src={IMAGES.Robot}
             alt="Robot"
             className="fixed w-32 top-50 right-40 animate-float-fast"
           />
