@@ -21,8 +21,12 @@ const InterviewPage = () => {
   const { interviewId, setInterviewId, recording } = useInterviewStore();
 
   const { startRecording, stopRecording } = useAudioRecorder();
-  const { startVideoRecording, stopVideoRecording, videoChunksRef } =
-    useVideoRecorder();
+  const {
+    videoRecording,
+    startVideoRecording,
+    stopVideoRecording,
+    videoChunksRef,
+  } = useVideoRecorder();
 
   // 면접 ID 설정
   useEffect(() => {
@@ -35,8 +39,11 @@ const InterviewPage = () => {
 
   // 영상 녹화 시작
   useEffect(() => {
-    startVideoRecording();
-  }, [startVideoRecording]);
+    if (!videoRecording) {
+      startVideoRecording();
+      console.log("🎥 startVideoRecording 실행됨");
+    }
+  }, [videoRecording, startVideoRecording]);
 
   return (
     <div className="flex flex-col h-screen">
