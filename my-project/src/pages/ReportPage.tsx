@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import Header_login from "../components/headers/Header_login";
 import ComprehensiveReport from "../components/reports/ComprehensiveReport";
 import QuestionReport from "../components/reports/QuestionReport";
@@ -7,6 +7,7 @@ import BehaviorReport from "../components/reports/BehaviorReport";
 import "../index.css";
 import { FaFilePdf } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
+import axiosInstance from "../api/axiosInstance";
 
 const ReportPage = () => {
   const location = useLocation();
@@ -28,17 +29,14 @@ const ReportPage = () => {
       try {
         // 첫 번째 API 실행 (행동 데이터 분석)
         console.log("Executing first API: Behavior analysis");
-        await axios.post(
-          `http://localhost:8000/api/apps/behavior/${interviewId}`,
-          {}
-        );
+        await axiosInstance.post(`/api/apps/behavior/${interviewId}`, {});
 
         // 첫 번째 API가 성공하면 두 번째 API 실행 (결과 데이터 가져오기)
         console.log(
           "First API succeeded, executing second API: Fetching results"
         );
-        const response = await axios.post(
-          `http://localhost:8000/api/apps/result/${interviewId}`,
+        const response = await axiosInstance.post(
+          `/api/apps/result/${interviewId}`,
           {
             user_id: 1,
             question_count: 3,

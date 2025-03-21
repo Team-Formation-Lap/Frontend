@@ -1,47 +1,59 @@
-import React from "react";
+import { useEffect, ReactNode } from "react";
 
-// Modal 컴포넌트의 props 인터페이스 정의
 interface ModalProps {
-  isOpen: boolean; // 모달 열림 여부
-  onClose: () => void; // 모달 닫기 핸들러
-  children: React.ReactNode; // 모달 내부에 렌더링할 콘텐츠
+  isOpen: boolean;
+  onClose: () => void;
+  children: ReactNode;
+  width?: string;
+  height?: string;
+  rounded?: string;
 }
 
-// Modal 컴포넌트 정의
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  if (!isOpen) {
-    return null;
-  }
-
-  // 모달 배경 클릭 핸들러: 배경을 클릭하면 모달 닫기
-  const handleBackgroundClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      onClose(); // 배경 클릭 시 onClose 콜백 호출
+function Modal({
+  isOpen,
+  onClose,
+  children,
+  width = "w-120",
+  height = "h-120",
+  rounded = "rounded-3xl",
+}: ModalProps) {
+  // ESC 키로 모달 닫기 기능 추가
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    if (isOpen) {
+      document.addEventListener("keydown", handleKeyDown);
     }
-  };
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
 
   return (
-    // 모달 배경 (회색 반투명 레이어)
     <div
       className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-[9999]"
-      onClick={handleBackgroundClick} // 배경 클릭 핸들러 설정
+      onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      {/* 모달 콘텐츠 */}
       <div
-        className="bg-white p-8 rounded-3xl w-120 h-120 text-center relative"
-        onClick={(e) => e.stopPropagation()} // 클릭 이벤트 전파 중단 (배경 클릭과 구분)
+        className={`bg-white p-8 ${rounded} ${width} ${height} text-center relative`}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* 닫기 버튼 */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-4  text-gray-400 hover:text-gray-600 text-2xl"
+          className="absolute top-2 right-4 text-gray-400 hover:text-gray-600 text-2xl"
         >
           &times;
         </button>
-        {children} {/* 모달 내부에 렌더링될 콘텐츠 */}
+        {children}
       </div>
     </div>
   );
-};
+}
 
 export default Modal;
