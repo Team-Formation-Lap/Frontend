@@ -5,7 +5,7 @@ export const uploadResume = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
 
-  const response = await axiosInstance.post(`/upload/1`, formData, {
+  const response = await axiosInstance.post(`/resumes/upload/1`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
