@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-const WebcamFeed: React.FC = () => {
+const WebcamFeed = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -23,6 +23,7 @@ const WebcamFeed: React.FC = () => {
     // 컴포넌트 언마운트 시 스트림 정지
     return () => {
       if (videoRef.current && videoRef.current.srcObject) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
         tracks.forEach((track) => track.stop());
       }
