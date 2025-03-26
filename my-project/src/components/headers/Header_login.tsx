@@ -1,6 +1,8 @@
 import useNavigation from "../../hooks/useNavigation";
-
-const Header_login = () => {
+interface Header_loginProps {
+  handleLoginClick: () => void;
+}
+const Header_login = ({ handleLoginClick }: Header_loginProps) => {
   const { goToHome } = useNavigation();
 
   return (
@@ -14,7 +16,10 @@ const Header_login = () => {
           IntelliView
         </button>
         <div className="flex space-x-4">
-          <button className="px-4 py-2 text-gray-700 border rounded-md hover:bg-gray-100">
+          <button
+            onClick={handleLoginClick}
+            className="px-4 py-2 text-gray-700 border rounded-md hover:bg-gray-100"
+          >
             로그아웃
           </button>
           <button className="px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700">

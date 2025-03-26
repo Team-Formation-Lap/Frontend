@@ -6,12 +6,16 @@ import ReportPage from "./pages/ReportPage";
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ResumeUploadModal from "./components/modals/ResumeUploadModal";
+import LoginModal from "./components/modals/LoginModal";
 
 function App() {
   const [isUploadingModalOpen, setIsUploadingModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const openUploadingModal = () => setIsUploadingModalOpen(true);
   const closeUploadingModal = () => setIsUploadingModalOpen(false);
+  const openLoginModal = () => setIsLoginModalOpen(true);
+  const closeLoginModal = () => setIsLoginModalOpen(false);
 
   return (
     <Router>
@@ -21,6 +25,7 @@ function App() {
           element={
             <StartPage
               openUploadingModal={openUploadingModal} // 핸들러 전달
+              openLoginModal={openLoginModal} // 핸들러 전달
             />
           }
         />
@@ -33,6 +38,7 @@ function App() {
         isOpen={isUploadingModalOpen}
         onClose={closeUploadingModal}
       />
+      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
     </Router>
   );
 }
