@@ -18,7 +18,7 @@ const ResumeUploadModal = ({ isOpen, onClose }: ResumeUploadModalProps) => {
   } = useResumeUpload(onClose);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} width="w-[500px]" height="h-auto">
       <div className="text-center font-museo relative">
         <img
           src={IMAGES.Man}
