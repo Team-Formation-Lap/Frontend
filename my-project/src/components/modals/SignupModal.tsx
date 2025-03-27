@@ -18,6 +18,8 @@ const SignupModal = ({ isOpen, onClose }: SignupModalProps) => {
     setConfirmPassword,
     checkDuplicateEmail,
     handleSignup,
+    isEmailVerified,
+    isLoading,
   } = useSignup();
 
   return (
@@ -42,6 +44,7 @@ const SignupModal = ({ isOpen, onClose }: SignupModalProps) => {
               className="mt-1 w-full px-4 py-2 bg-gray-100 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#5C3BFF]"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              disabled={isLoading}
             />
           </div>
 
@@ -50,18 +53,35 @@ const SignupModal = ({ isOpen, onClose }: SignupModalProps) => {
               아이디
             </label>
             <div className="flex gap-2">
-              <input
-                type="email"
-                placeholder="intelliview@example.com"
-                className="mt-1 flex-1 px-4 py-2 bg-gray-100 rounded-md text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5C3BFF]"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <div className="flex-1 relative">
+                <input
+                  type="email"
+                  placeholder="intelliview@example.com"
+                  className={`mt-1 w-full px-4 py-2 bg-gray-100 rounded-md text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5C3BFF] ${
+                    isEmailVerified ? "border-2 border-green-500" : ""
+                  }`}
+                  value={email}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setEmail(e.target.value)
+                  }
+                  disabled={isLoading || isEmailVerified}
+                />
+                {isEmailVerified && (
+                  <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
+                    ✓
+                  </span>
+                )}
+              </div>
               <button
-                className="mt-1 px-4 py-2 text-sm font-semibold text-white bg-[#5C3BFF] rounded-md hover:bg-[#4b2fe6] transition whitespace-nowrap"
+                className={`mt-1 px-4 py-2 text-sm font-semibold text-white rounded-md whitespace-nowrap transition ${
+                  isEmailVerified
+                    ? "bg-green-500 cursor-not-allowed"
+                    : "bg-[#5C3BFF] hover:bg-[#4b2fe6]"
+                }`}
                 onClick={checkDuplicateEmail}
+                disabled={isLoading || isEmailVerified || !email}
               >
-                중복확인
+                {isEmailVerified ? "확인완료" : "중복확인"}
               </button>
             </div>
           </div>
@@ -76,6 +96,7 @@ const SignupModal = ({ isOpen, onClose }: SignupModalProps) => {
               className="mt-1 w-full px-4 py-2 bg-gray-100 rounded-md text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5C3BFF]"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
             />
           </div>
 
@@ -89,15 +110,21 @@ const SignupModal = ({ isOpen, onClose }: SignupModalProps) => {
               className="mt-1 w-full px-4 py-2 bg-gray-100 rounded-md text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5C3BFF]"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              disabled={isLoading}
             />
           </div>
         </div>
 
         <button
-          className="w-full bg-[#5C3BFF] text-white py-2 rounded-full font-semibold hover:bg-[#4b2fe6] transition mt-4"
+          className={`w-full py-2 rounded-full font-semibold transition ${
+            isLoading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#5C3BFF] hover:bg-[#4b2fe6]"
+          } text-white`}
           onClick={handleSignup}
+          disabled={isLoading || !isEmailVerified}
         >
-          회원가입
+          {isLoading ? "처리 중..." : "회원가입"}
         </button>
       </div>
     </Modal>
