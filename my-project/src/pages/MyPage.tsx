@@ -15,7 +15,7 @@ interface AnalysisResult {
 }
 
 const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage] = useState(1);
   const itemsPerPage = 7;
 
   // 더미 데이터
@@ -48,7 +48,7 @@ const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
   ];
 
   // 전체 페이지 수 계산
-  const totalPages = Math.ceil(dummyResults.length / itemsPerPage);
+  // const totalPages = Math.ceil(dummyResults.length / itemsPerPage);
 
   // 현재 페이지에 표시할 아이템들
   const currentItems = dummyResults.slice(
