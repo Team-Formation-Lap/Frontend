@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import Header_login from "../components/headers/Header_login";
+import Header from "../components/headers/Header";
 import ComprehensiveReport from "../components/reports/ComprehensiveReport";
 import QuestionReport from "../components/reports/QuestionReport";
 import BehaviorReport from "../components/reports/BehaviorReport";
@@ -75,7 +75,7 @@ const ReportPage = () => {
   return (
     <div className="flex flex-col h-screen">
       {/* 헤더 */}
-      <Header_login />
+      <Header handleLoginClick={() => {}} handleSignupClick={() => {}} />
       {/* 네비게이션 바 */}
       <div className="mx-14 mt-4 bg-[#5A55D9] text-white rounded-t-lg flex justify-between items-center">
         {/* 탭 메뉴 */}
