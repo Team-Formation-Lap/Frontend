@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { uploadResume, startInterview } from "../api/resumeAPI";
-import useNavigation from "./useNavigation";
+// import useNavigation from "./useNavigation";
 
 const useResumeUpload = (onClose: () => void) => {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadCompleted, setUploadCompleted] = useState(false);
-  const { goToInterview } = useNavigation();
+  // const { goToInterview } = useNavigation();
 
   // 파일 선택 핸들러
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,13 +41,64 @@ const useResumeUpload = (onClose: () => void) => {
     if (!uploadCompleted) return;
 
     try {
+      // 1. 면접 세션 시작
       const data = await startInterview();
-      if (data?.interview_id) {
-        goToInterview(data.interview_id);
-        onClose();
+      if (!data?.interview_id) {
+        throw new Error("면접 세션 생성 실패");
       }
+
+      // 2. 새 창으로 면접 페이지 열기
+      const interviewWindow = window.open(
+        `/interview?id=${data.interview_id}`,
+        "Interview Room",
+        "width=1024,height=768,menubar=no,toolbar=no,status=no"
+      );
+
+      if (!interviewWindow) {
+        alert("팝업이 차단되었습니다. 팝업 차단을 해제해주세요.");
+        return;
+      }
+
+      // 3. 새 창이 완전히 로드된 후에 오디오 공유 시작
+      interviewWindow.onload = async () => {
+        try {
+          // 화면 공유 권한 요청 (오디오 포함)
+          const displayStream = await navigator.mediaDevices.getDisplayMedia({
+            video: true,
+            audio: true,
+          });
+
+          // 스트림 정보를 자식 창으로 전달
+          interviewWindow.postMessage(
+            {
+              type: "DISPLAY_STREAM",
+              stream: displayStream,
+            },
+            "*"
+          );
+
+          // 자식 창이 닫힐 때 스트림 정리
+          interviewWindow.onbeforeunload = () => {
+            displayStream.getTracks().forEach((track) => track.stop());
+          };
+
+          onClose(); // 모달 닫기
+        } catch (error) {
+          if (error instanceof Error && error.name === "NotAllowedError") {
+            alert(
+              "화면 공유가 필요합니다. 면접을 시작하려면 화면 공유를 허용해주세요."
+            );
+            interviewWindow.close(); // 면접 창 닫기
+            return;
+          }
+          console.error("오디오 공유 오류:", error);
+          alert("오디오 공유 설정 중 오류가 발생했습니다.");
+          interviewWindow.close(); // 면접 창 닫기
+        }
+      };
     } catch (error) {
       console.error("면접 시작 오류:", error);
+      alert("면접 시작 중 오류가 발생했습니다.");
     }
   };
 

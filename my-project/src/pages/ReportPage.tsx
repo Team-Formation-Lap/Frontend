@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 
 import Header from "../components/headers/Header";
-import ComprehensiveReport from "../components/reports/ComprehensiveReport";
-import QuestionReport from "../components/reports/QuestionReport";
-import BehaviorReport from "../components/reports/BehaviorReport";
+// import ComprehensiveReport from "../components/reports/ComprehensiveReport";
+import ComprehensiveReport_design from "../components/reports/ComprehensiveReport_design";
+// import QuestionReport from "../components/reports/QuestionReport";
+import QuestionReport_design from "../components/reports/QuestionReport_design";
+// import BehaviorReport from "../components/reports/BehaviorReport";
+import BehaviorReport_design from "../components/reports/BehaviorReport_design";
 import "../index.css";
 import { FaFilePdf } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
@@ -61,12 +64,18 @@ const ReportPage = () => {
     switch (activeTab) {
       case "comprehensive":
         return (
-          <ComprehensiveReport feedback={reportData.comprehensiveFeedback} />
+          // <ComprehensiveReport_design
+          //   feedback={reportData.comprehensiveFeedback}
+          // />
+          <ComprehensiveReport_design />
         );
       case "question":
-        return <QuestionReport feedback={reportData.questionFeedback} />;
+        return (
+          // <QuestionReport feedback={reportData.questionFeedback} />
+          <QuestionReport_design />
+        );
       case "behavior":
-        return <BehaviorReport feedback={reportData.behaviorFeedback} />;
+        return <BehaviorReport_design feedback={reportData.behaviorFeedback} />;
       default:
         return null;
     }

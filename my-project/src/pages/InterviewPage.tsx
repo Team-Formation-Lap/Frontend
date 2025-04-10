@@ -1,6 +1,6 @@
 // src/pages/InterviewPage.tsx
 import { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import useInterviewStore from "../store/useInterviewStore";
 import useWebSocket from "../hooks/useWebSocket";
 import useAudioRecorder from "../hooks/useAudioRecorder";
@@ -11,14 +11,15 @@ import VirtualInterviewer from "../components/VirtualInterviewer";
 import WebcamFeed from "../components/WebcamFeed";
 
 const InterviewPage = () => {
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const virtualInterviewerRef = useRef<{
     playVideo: () => void;
     pauseVideo: () => void;
   } | null>(null);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+  const displayStreamRef = useRef<MediaStream | null>(null);
 
-  const { interviewId, setInterviewId, recording } = useInterviewStore();
+  const { setInterviewId, recording } = useInterviewStore();
 
   const { startRecording, stopRecording } = useAudioRecorder();
   const {
@@ -28,22 +29,45 @@ const InterviewPage = () => {
     videoChunksRef,
   } = useVideoRecorder();
 
-  // 면접 ID 설정
+  // URL 파라미터에서 면접 ID 가져오기
   useEffect(() => {
-    const id = Number(location.state?.interviewId || null);
-    setInterviewId(id);
-  }, [location, setInterviewId]);
+    const id = Number(searchParams.get("id"));
+    if (id) {
+      setInterviewId(id);
+    }
+  }, [searchParams, setInterviewId]);
+
+  // 부모 창에서 전달받은 디스플레이 스트림 처리
+  useEffect(() => {
+    const handleMessage = async (event: MessageEvent) => {
+      if (event.data.type === "DISPLAY_STREAM") {
+        try {
+          // 부모 창에서 전달받은 스트림을 직접 사용
+          const displayStream = event.data.stream;
+          displayStreamRef.current = displayStream;
+
+          // videoRecorder에 스트림 전달
+          if (!videoRecording) {
+            startVideoRecording(displayStream);
+          }
+        } catch (error) {
+          console.error("스트림 처리 중 오류:", error);
+        }
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+      // 컴포넌트 언마운트 시 스트림 정리
+      if (displayStreamRef.current) {
+        displayStreamRef.current.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [videoRecording, startVideoRecording]);
 
   // 웹소켓 연결 & 메시지 처리
   useWebSocket(virtualInterviewerRef, currentAudioRef);
-
-  // 영상 녹화 시작
-  useEffect(() => {
-    if (!videoRecording) {
-      startVideoRecording();
-      console.log("🎥 startVideoRecording 실행됨");
-    }
-  }, [videoRecording, startVideoRecording]);
 
   return (
     <div className="flex flex-col h-screen">
@@ -74,11 +98,11 @@ const InterviewPage = () => {
             zIndex: 1000,
           }}
         >
-          {interviewId !== null && (
+          {useInterviewStore.getState().interviewId !== null && (
             <InterviewHeader
-              interviewId={interviewId}
+              interviewId={useInterviewStore.getState().interviewId!}
               stopVideoRecording={stopVideoRecording}
-              socket={useInterviewStore.getState().socket} // 전역 상태에서 socket 가져오기
+              socket={useInterviewStore.getState().socket}
               videoChunksRef={videoChunksRef}
             />
           )}
