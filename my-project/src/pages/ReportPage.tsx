@@ -15,11 +15,11 @@ import axiosInstance from "../api/axiosInstance";
 const ReportPage = () => {
   const location = useLocation();
   const interviewId = location.state?.interviewId;
-  const [reportData, setReportData] = useState({
-    comprehensiveFeedback: "",
-    questionFeedback: "",
-    behaviorFeedback: "",
-  });
+  // const [reportData, setReportData] = useState({
+  //   comprehensiveFeedback: "",
+  //   questionFeedback: "",
+  //   behaviorFeedback: "",
+  // });
   const [activeTab, setActiveTab] = useState<
     "comprehensive" | "question" | "behavior"
   >("comprehensive");
@@ -47,11 +47,11 @@ const ReportPage = () => {
         );
 
         console.log("API response:", response.data);
-        setReportData({
-          comprehensiveFeedback: response.data.feedback["종합피드백"] || "",
-          questionFeedback: response.data.feedback["답변피드백"] || "",
-          behaviorFeedback: response.data.feedback["행동피드백"] || "",
-        });
+        // setReportData({
+        //   comprehensiveFeedback: response.data.feedback["종합피드백"] || "",
+        //   questionFeedback: response.data.feedback["답변피드백"] || "",
+        //   behaviorFeedback: response.data.feedback["행동피드백"] || "",
+        // });
       } catch (error) {
         console.error("Error fetching report data:", error);
       }
@@ -75,7 +75,7 @@ const ReportPage = () => {
           <QuestionReport_design />
         );
       case "behavior":
-        return <BehaviorReport_design feedback={reportData.behaviorFeedback} />;
+        return <BehaviorReport_design />;
       default:
         return null;
     }
