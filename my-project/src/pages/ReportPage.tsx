@@ -127,7 +127,7 @@ const ReportPage = () => {
         </div>
       </div>
       {/* 렌더링 영역 */}
-      <div className="mx-14 mt-0 bg-gray-100 rounded-b-lg p-6">
+      <div className="mx-14 mt-0 bg-indigo-100 rounded-b-lg p-6">
         {renderContent()}
       </div>
     </div>
