@@ -12,7 +12,10 @@ import axiosInstance from "../api/axiosInstance";
 const ArchivedReportPage = () => {
   const location = useLocation();
   const resultId = location.state?.resultId;
+  console.log("resultId", { resultId });
 
+  const create_at = location.state?.create_at;
+  console.log("create_at", { create_at });
   const [reportData, setReportData] = useState({
     overallFeedback: "",
     behaviorFeedback: "",
@@ -22,8 +25,19 @@ const ArchivedReportPage = () => {
   const [activeTab, setActiveTab] = useState<
     "comprehensive" | "question" | "behavior"
   >("comprehensive");
-  const dummyDate = "2025년 01월 26일 21시 30분";
 
+  const formatDateTime = (isoString: string) => {
+    const date = new Date(isoString);
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, "0");
+    const day = `${date.getDate()}`.padStart(2, "0");
+    const hours = `${date.getHours()}`.padStart(2, "0");
+    const minutes = `${date.getMinutes()}`.padStart(2, "0");
+
+    return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분`;
+  };
+  const formattedDate = create_at ? formatDateTime(create_at) : "";
+  console.log("날짜", { formattedDate });
   useEffect(() => {
     const fetchReport = async () => {
       if (!resultId) return;
@@ -98,7 +112,7 @@ const ArchivedReportPage = () => {
 
         {/* 날짜 및 PDF 저장 버튼 */}
         <div className="flex items-center space-x-8">
-          <span>{dummyDate}</span>
+          <span>{formattedDate}</span>
           <button className="flex items-center px-4 py-1 border border-dashed border-white hover:bg-white hover:text-[#4C40B5] relative left-[-10px]">
             <FaFilePdf className="mr-2" />
             PDF 문서 저장하기

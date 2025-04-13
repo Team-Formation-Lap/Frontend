@@ -25,6 +25,15 @@ const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
     const fetchResults = async () => {
       try {
         const data = await getInterviewResults();
+        // 각 결과의 날짜 형식 확인
+        data.results.forEach((result: AnalysisResult) => {
+          console.log(
+            "📅 result_id:",
+            result.result_id,
+            "create_at:",
+            result.create_at
+          );
+        });
         setResults(data.results);
       } catch (err) {
         console.error("면접 결과 조회 실패", err);
@@ -76,7 +85,11 @@ const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
                   <button
                     className="px-4 py-1 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
                     onClick={() => {
-                      console.log("🔍 선택한 result_id:", result.result_id);
+                      console.log(
+                        "🔍 선택한 result_id:",
+                        result.result_id,
+                        result.create_at
+                      );
                       goToArchivedReport(result.result_id, result.create_at);
                     }}
                   >
