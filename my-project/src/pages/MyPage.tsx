@@ -19,12 +19,12 @@ const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
   const [results, setResults] = useState<AnalysisResult[]>([]);
   const [currentPage] = useState(1);
   const itemsPerPage = 7;
-  const { goToReport } = useNavigation(); // ✅ 추가
+  const { goToArchivedReport } = useNavigation();
 
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const data = await getInterviewResults(2); // userId 고정
+        const data = await getInterviewResults();
         setResults(data.results);
       } catch (err) {
         console.error("면접 결과 조회 실패", err);
@@ -76,8 +76,8 @@ const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
                   <button
                     className="px-4 py-1 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
                     onClick={() => {
-                      console.log("🔍 선택한 interviewId:", result.result_id);
-                      goToReport(result.result_id);
+                      console.log("🔍 선택한 result_id:", result.result_id);
+                      goToArchivedReport(result.result_id);
                     }}
                   >
                     결과 보기

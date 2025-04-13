@@ -8,9 +8,9 @@ const useNavigation = () => {
     goToInterview: (interviewId: number) =>
       navigate("/interview", { state: { interviewId } }),
     goToMyPage: () => navigate("/mypage"),
-    // goToReport: () => navigate("/report"),
-    goToReport: (resultId: number) =>
-      navigate("/report", { state: { resultId } }),
+    goToReport: () => navigate("/report"),
+    goToArchivedReport: (resultId: number) =>
+      navigate("/archivedReport", { state: { resultId } }),
   };
 };
 
