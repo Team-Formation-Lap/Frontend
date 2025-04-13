@@ -13,10 +13,6 @@ const ArchivedReportPage = () => {
   const location = useLocation();
   const resultId = location.state?.resultId;
 
-  useEffect(() => {
-    console.log("ArchivedReportPage - resultId:", resultId);
-  }, [resultId]);
-
   const [reportData, setReportData] = useState({
     overallFeedback: "",
     behaviorFeedback: "",
@@ -52,7 +48,6 @@ const ArchivedReportPage = () => {
   }, [resultId]);
 
   const renderContent = () => {
-    console.log("renderContent resultId:", resultId);
     switch (activeTab) {
       case "comprehensive":
         return <ComprehensiveReport feedback={reportData.overallFeedback} />;

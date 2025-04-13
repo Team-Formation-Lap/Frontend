@@ -77,7 +77,7 @@ const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
                     className="px-4 py-1 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
                     onClick={() => {
                       console.log("🔍 선택한 result_id:", result.result_id);
-                      goToArchivedReport(result.result_id);
+                      goToArchivedReport(result.result_id, result.create_at);
                     }}
                   >
                     결과 보기

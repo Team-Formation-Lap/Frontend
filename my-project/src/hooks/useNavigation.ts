@@ -9,8 +9,8 @@ const useNavigation = () => {
       navigate("/interview", { state: { interviewId } }),
     goToMyPage: () => navigate("/mypage"),
     goToReport: () => navigate("/report"),
-    goToArchivedReport: (resultId: number) =>
-      navigate("/archivedReport", { state: { resultId } }),
+    goToArchivedReport: (resultId: number, create_at: string) =>
+      navigate("/archivedReport", { state: { resultId, create_at } }),
   };
 };
 
