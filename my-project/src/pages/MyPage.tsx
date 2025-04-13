@@ -1,5 +1,7 @@
 import Header from "../components/headers/Header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getInterviewResults } from "../api/resultAPI";
+import useNavigation from "../hooks/useNavigation"; // 경로는 실제 위치에 따라 조정
 
 interface MyPageProps {
   openLoginModal: () => void;
@@ -7,51 +9,32 @@ interface MyPageProps {
   openUploadingModal: () => void;
 }
 
-// 분석 결과 타입 정의
 interface AnalysisResult {
-  id: number;
-  date: string;
-  fileName: string;
+  result_id: number;
+  create_at: string;
+  resume: string;
 }
 
 const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
+  const [results, setResults] = useState<AnalysisResult[]>([]);
   const [currentPage] = useState(1);
   const itemsPerPage = 7;
+  const { goToReport } = useNavigation(); // ✅ 추가
 
-  // 더미 데이터
-  const dummyResults: AnalysisResult[] = [
-    {
-      id: 1,
-      date: "2025-01-06 17:04",
-      fileName: "신수진이력서_2025버전.pdf",
-    },
-    {
-      id: 2,
-      date: "2025-01-05 15:30",
-      fileName: "신수진이력서_2024버전.pdf",
-    },
-    {
-      id: 3,
-      date: "2025-01-04 11:20",
-      fileName: "신수진이력서_초안.pdf",
-    },
-    {
-      id: 4,
-      date: "2025-01-03 09:45",
-      fileName: "신수진이력서_수정본.pdf",
-    },
-    {
-      id: 5,
-      date: "2025-01-02 14:15",
-      fileName: "신수진이력서_최종.pdf",
-    },
-  ];
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        const data = await getInterviewResults(2); // userId 고정
+        setResults(data.results);
+      } catch (err) {
+        console.error("면접 결과 조회 실패", err);
+      }
+    };
 
-  // 전체 페이지 수 계산
-  // const totalPages = Math.ceil(dummyResults.length / itemsPerPage);
+    fetchResults();
+  }, []);
 
-  // 현재 페이지에 표시할 아이템들
-  const currentItems = dummyResults.slice(
+  const currentItems = results.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -77,24 +60,25 @@ const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
 
           {/* 리스트 */}
           <div className="min-h-[400px]">
-            {currentItems.map((result) => (
+            {currentItems.map((result, index) => (
               <div
-                key={result.id}
+                key={result.result_id}
                 className="grid grid-cols-12 gap-4 p-4 hover:bg-gray-50"
               >
-                <div className="col-span-1 pl-8 text-gray-600">{result.id}</div>
+                <div className="col-span-1 pl-8 text-gray-600">{index + 1}</div>
                 <div className="col-span-3 text-center text-gray-600">
-                  {result.date}
+                  {result.create_at}
                 </div>
                 <div className="col-span-6 text-center text-gray-800">
-                  {result.fileName}
+                  {result.resume}
                 </div>
                 <div className="col-span-2 text-center">
                   <button
                     className="px-4 py-1 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
-                    onClick={() =>
-                      console.log(`View result for ${result.fileName}`)
-                    }
+                    onClick={() => {
+                      console.log("🔍 선택한 interviewId:", result.result_id);
+                      goToReport(result.result_id);
+                    }}
                   >
                     결과 보기
                   </button>
