@@ -1,6 +1,6 @@
 // hooks/useLoginMutation.ts
 import { useMutation } from "@tanstack/react-query";
-import { useAuthStore } from "@/store/authStore";
+import { useAuthStore } from "../store/authStore";
 
 interface LoginParams {
   email: string;

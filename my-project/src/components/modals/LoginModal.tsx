@@ -1,7 +1,6 @@
 import Modal from "./Modal";
-import useLogin from "../../hooks/useLogin";
-import { useLoginMutation } from "../../hooks/useLoginMutation";
-import { useState } from "react";
+import { useLogin } from "../../hooks/useLogin";
+// import { useState } from "react";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -10,18 +9,22 @@ interface LoginModalProps {
 }
 
 const LoginModal = ({ isOpen, onClose, onSignupClick }: LoginModalProps) => {
-  const { email, password, setEmail, setPassword } = useLogin();
-  const { mutate } = useLoginMutation();
+  const {
+    email,
+    password,
+    setEmail,
+    setPassword,
+    login,
+    // loading,
+    // errorMessage,
+  } = useLogin();
 
-  const handleLogin = () => {
-    mutate(
-      { email, password },
-      {
-        onSuccess: () => {
-          onClose(); // 로그인 성공 시 모달 닫기
-        },
-      }
-    );
+  const handleLogin = async () => {
+    await login();
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      onClose(); // 로그인 성공 시 모달 닫기
+    }
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose} width="w-[500px]" height="h-auto">

@@ -19,7 +19,7 @@ interface ApiResponse {
 // 이메일 중복 확인 API
 export const checkEmailExists = async (email: string): Promise<ApiResponse> => {
   try {
-    const response = await axiosInstance.post(`/users/exists`, {
+    const response = await axiosInstance.post(`/user/exists`, {
       email,
     });
 
@@ -40,7 +40,7 @@ export const registerUser = async (
   userData: SignupRequest
 ): Promise<ApiResponse> => {
   try {
-    const response = await axiosInstance.post("/users/register", userData, {
+    const response = await axiosInstance.post("/user/register", userData, {
       headers: {
         "Content-Type": "application/json",
       },
