@@ -3,6 +3,7 @@ import "./index.css";
 import StartPage from "./pages/StartPage";
 import InterviewPage from "./pages/InterviewPage";
 import ReportPage from "./pages/ReportPage";
+import ArchivedReportPage from "./pages/ArchivedReportPage";
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ResumeUploadModal from "./components/modals/ResumeUploadModal";
@@ -37,6 +38,8 @@ function App() {
         />
         <Route path="/interview" element={<InterviewPage />} />
         <Route path="/report" element={<ReportPage />} />
+        <Route path="/archivedReport" element={<ArchivedReportPage />} />
+
         <Route
           path="/myPage"
           element={

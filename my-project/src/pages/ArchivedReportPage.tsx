@@ -11,11 +11,17 @@ import axiosInstance from "../api/axiosInstance";
 
 const ArchivedReportPage = () => {
   const location = useLocation();
-  const resultId = location.state?.result_id;
+  const resultId = location.state?.resultId;
+
+  useEffect(() => {
+    console.log("ArchivedReportPage - resultId:", resultId);
+  }, [resultId]);
+
   const [reportData, setReportData] = useState({
-    comprehensiveFeedback: "",
-    questionFeedback: "",
+    overallFeedback: "",
     behaviorFeedback: "",
+    answerFeedback: "",
+    questionPairs: [],
   });
   const [activeTab, setActiveTab] = useState<
     "comprehensive" | "question" | "behavior"
@@ -23,48 +29,35 @@ const ArchivedReportPage = () => {
   const dummyDate = "2025년 01월 26일 21시 30분";
 
   useEffect(() => {
-    const fetchReports = async () => {
+    const fetchReport = async () => {
       if (!resultId) return;
 
       try {
-        // 첫 번째 API 실행 (행동 데이터 분석)
-        console.log("Executing first API: Behavior analysis");
-        await axiosInstance.post(`/api/apps/behavior/${resultId}`, {});
+        const response = await axiosInstance.get(`/results/${resultId}`);
+        const data = response.data;
 
-        // 첫 번째 API가 성공하면 두 번째 API 실행 (결과 데이터 가져오기)
-        console.log(
-          "First API succeeded, executing second API: Fetching results"
-        );
-        const response = await axiosInstance.post(
-          `/api/apps/result/${resultId}`,
-          {
-            user_id: 1,
-            question_count: 3,
-          }
-        );
-
-        console.log("API response:", response.data);
         setReportData({
-          comprehensiveFeedback: response.data.feedback["종합피드백"] || "",
-          questionFeedback: response.data.feedback["답변피드백"] || "",
-          behaviorFeedback: response.data.feedback["행동피드백"] || "",
+          //   resume: data.resume,
+          overallFeedback: data.overall_feedback,
+          behaviorFeedback: data.behavior_feedback,
+          answerFeedback: data.answer_feedback,
+          questionPairs: data.qna_pair || [],
         });
       } catch (error) {
-        console.error("Error fetching report data:", error);
+        console.error("📛 결과 조회 실패:", error);
       }
     };
 
-    fetchReports();
+    fetchReport();
   }, [resultId]);
 
   const renderContent = () => {
+    console.log("renderContent resultId:", resultId);
     switch (activeTab) {
       case "comprehensive":
-        return (
-          <ComprehensiveReport feedback={reportData.comprehensiveFeedback} />
-        );
+        return <ComprehensiveReport feedback={reportData.overallFeedback} />;
       case "question":
-        return <QuestionReport feedback={reportData.questionFeedback} />;
+        return <QuestionReport feedback={reportData.answerFeedback} />;
       case "behavior":
         return <BehaviorReport feedback={reportData.behaviorFeedback} />;
       default:
