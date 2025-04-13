@@ -1,7 +1,7 @@
 const ComprehensiveReport_design = () => {
   return (
-    <div className="p-4 bg-white shadow-md rounded-md">
-      <p>{"피드백을 생성중입니다.."}</p>
+    <div className="bg-white mx-16 my-12 py-4 shadow-md rounded-md ">
+      <div className="p-4 space-y-6 mx-12"></div>
     </div>
   );
 };
