@@ -15,6 +15,7 @@ const axiosInstance = axios.create({
 //   return config;
 // });
 
+// ✅ 요청마다 최신 accessToken 동적으로 주입
 axiosInstance.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken;
   if (token) {

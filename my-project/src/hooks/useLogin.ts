@@ -30,11 +30,13 @@ export const useLogin = () => {
       console.log("📦 응답 데이터:", data);
 
       const token = data.access;
+      const userId = data.userId;
       // ✅ 콘솔 출력 추가
       console.log("✅ 로그인 성공");
       console.log("🔐 Access Token:", token);
+      console.log("👤 User ID:", userId);
 
-      login(token);
+      login(token, userId);
       localStorage.setItem("accessToken", token);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

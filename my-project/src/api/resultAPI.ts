@@ -1,8 +1,8 @@
 // api/resultAPI.ts
 import axiosInstance from "./axiosInstance";
 
-export const getInterviewResults = async (userId: number) => {
-  const response = await axiosInstance.get(`/results/list/${userId}`);
+export const getInterviewResults = async () => {
+  const response = await axiosInstance.get("/results/list");
   return response.data;
 };
 
