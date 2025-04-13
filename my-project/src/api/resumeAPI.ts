@@ -1,5 +1,5 @@
 import axiosInstance from "./axiosInstance";
-import { useAuthStore } from "../store/authStore";
+import useAuthStore from "../store/authStore";
 // 이력서 업로드 API
 export const uploadResume = async (file: File) => {
   const formData = new FormData();
