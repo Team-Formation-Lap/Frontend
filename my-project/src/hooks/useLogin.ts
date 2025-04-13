@@ -1,16 +1,16 @@
 // hooks/useLogin.ts
 import { useState } from "react";
-import { useAuthStore } from "../store/authStore";
+import useAuthStore from "../store/authStore";
 
 export const useLogin = () => {
-  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+  const login = useAuthStore((state) => state.login);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const login = async () => {
+  const handleLogin = async () => {
     setLoading(true);
     setErrorMessage("");
 
@@ -34,7 +34,7 @@ export const useLogin = () => {
       console.log("✅ 로그인 성공");
       console.log("🔐 Access Token:", token);
 
-      setAccessToken(token);
+      login(token);
       localStorage.setItem("accessToken", token);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -50,7 +50,7 @@ export const useLogin = () => {
     setEmail,
     password,
     setPassword,
-    login,
+    login: handleLogin,
     loading,
     errorMessage,
   };
