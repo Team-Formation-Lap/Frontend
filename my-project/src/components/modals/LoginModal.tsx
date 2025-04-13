@@ -1,5 +1,6 @@
 import Modal from "./Modal";
-import useLogin from "../../hooks/useLogin";
+import { useLogin } from "../../hooks/useLogin";
+// import { useState } from "react";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -8,8 +9,23 @@ interface LoginModalProps {
 }
 
 const LoginModal = ({ isOpen, onClose, onSignupClick }: LoginModalProps) => {
-  const { email, password, setEmail, setPassword } = useLogin();
+  const {
+    email,
+    password,
+    setEmail,
+    setPassword,
+    login,
+    // loading,
+    // errorMessage,
+  } = useLogin();
 
+  const handleLogin = async () => {
+    await login();
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      onClose(); // 로그인 성공 시 모달 닫기
+    }
+  };
   return (
     <Modal isOpen={isOpen} onClose={onClose} width="w-[500px]" height="h-auto">
       <div className="text-center font-museo space-y-6 px-4 py-6">
@@ -54,7 +70,7 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }: LoginModalProps) => {
 
         <button
           className="w-full bg-[#5C3BFF] text-white py-2 rounded-full font-semibold hover:bg-[#4b2fe6] transition"
-          onClick={() => {}}
+          onClick={handleLogin}
         >
           로그인
         </button>
