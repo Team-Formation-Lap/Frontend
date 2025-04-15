@@ -7,6 +7,7 @@ import axiosInstance from "../../api/axiosInstance";
 interface ResumeManageModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onResumeSelected: () => void;
 }
 
 interface Resume {
@@ -14,7 +15,11 @@ interface Resume {
   filename: string;
 }
 
-const ResumeManageModal = ({ isOpen, onClose }: ResumeManageModalProps) => {
+const ResumeManageModal = ({
+  isOpen,
+  onClose,
+  onResumeSelected,
+}: ResumeManageModalProps) => {
   const { nickname } = useAuthStore();
   const {
     file,
@@ -22,10 +27,12 @@ const ResumeManageModal = ({ isOpen, onClose }: ResumeManageModalProps) => {
     uploadCompleted,
     handleFileChange,
     handleUploadResume: originalHandleUploadResume,
+    resetUploadState,
   } = useResumeUpload(onClose);
 
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [selectedResumeId, setSelectedResumeId] = useState<number | null>(null);
 
   const fetchResumes = async () => {
     try {
@@ -38,7 +45,8 @@ const ResumeManageModal = ({ isOpen, onClose }: ResumeManageModalProps) => {
 
   const handleUploadResume = async () => {
     await originalHandleUploadResume();
-    await fetchResumes(); // ✅ 업로드 후 리스트 새로고침
+    await fetchResumes();
+    resetUploadState();
   };
 
   const handleDelete = async (resumeId: number) => {
@@ -53,6 +61,12 @@ const ResumeManageModal = ({ isOpen, onClose }: ResumeManageModalProps) => {
     } finally {
       setDeletingId(null);
     }
+  };
+
+  const handleResumeSelect = (resumeId: number) => {
+    setSelectedResumeId(resumeId);
+    onResumeSelected();
+    onClose();
   };
 
   useEffect(() => {
@@ -78,6 +92,9 @@ const ResumeManageModal = ({ isOpen, onClose }: ResumeManageModalProps) => {
                   이력서 제목
                 </th>
                 <th scope="col" className="px-6 py-3 text-center">
+                  선택
+                </th>
+                <th scope="col" className="px-6 py-3 text-center">
                   삭제
                 </th>
               </tr>
@@ -87,6 +104,18 @@ const ResumeManageModal = ({ isOpen, onClose }: ResumeManageModalProps) => {
                 <tr key={resume.resume_id} className="border-t">
                   <td className="px-6 py-3 text-center">{index + 1}</td>
                   <td className="px-6 py-3">{resume.filename}</td>
+                  <td className="px-6 py-3 text-center">
+                    <button
+                      className={`text-indigo-500 border border-indigo-400 rounded-md px-2 py-1 text-sm hover:bg-indigo-50 ${
+                        selectedResumeId === resume.resume_id
+                          ? "bg-indigo-100"
+                          : ""
+                      }`}
+                      onClick={() => handleResumeSelect(resume.resume_id)}
+                    >
+                      선택
+                    </button>
+                  </td>
                   <td className="px-6 py-3 text-center">
                     <button
                       className={`text-red-500 border border-red-400 rounded-md px-2 py-1 text-sm hover:bg-red-50 ${
@@ -104,7 +133,7 @@ const ResumeManageModal = ({ isOpen, onClose }: ResumeManageModalProps) => {
               ))}
               {resumes.length === 0 && (
                 <tr>
-                  <td colSpan={3} className="text-center text-gray-400 py-6">
+                  <td colSpan={4} className="text-center text-gray-400 py-6">
                     등록된 이력서가 없습니다.
                   </td>
                 </tr>
