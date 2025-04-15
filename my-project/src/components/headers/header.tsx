@@ -32,6 +32,7 @@ const Header = ({ handleLoginClick, handleSignupClick }: HeaderProps) => {
                 onClick={() => {
                   logout();
                   console.log("로그아웃 되었습니다.");
+                  alert("로그아웃 되었습니다!");
                 }}
                 className="px-4 py-2 text-gray-700 border rounded-md hover:bg-gray-100"
               >
