@@ -7,12 +7,14 @@ import ArchivedReportPage from "./pages/ArchivedReportPage";
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ResumeUploadModal from "./components/modals/ResumeUploadModal";
+import ResumeManageModal from "./components/modals/ResumeManageModal";
 import LoginModal from "./components/modals/LoginModal";
 import SignupModal from "./components/modals/SignupModal";
 import MyPage from "./pages/MyPage";
 
 function App() {
   const [isUploadingModalOpen, setIsUploadingModalOpen] = useState(false);
+  const [isManageModalOpen, setIsManageModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
@@ -22,6 +24,8 @@ function App() {
   const closeLoginModal = () => setIsLoginModalOpen(false);
   const openSignupModal = () => setIsSignupModalOpen(true);
   const closeSignupModal = () => setIsSignupModalOpen(false);
+  const openManageModal = () => setIsManageModalOpen(true);
+  const closeManageModal = () => setIsManageModalOpen(false);
 
   const handleSignupSuccess = () => {
     setIsSignupModalOpen(false); // 회원가입 모달 닫기
@@ -49,9 +53,9 @@ function App() {
           path="/myPage"
           element={
             <MyPage
-              openUploadingModal={openUploadingModal}
               openLoginModal={openLoginModal}
               openSignupModal={openSignupModal}
+              openManageModal={openManageModal}
             />
           }
         />
@@ -61,6 +65,10 @@ function App() {
       <ResumeUploadModal
         isOpen={isUploadingModalOpen}
         onClose={closeUploadingModal}
+      />
+      <ResumeManageModal
+        isOpen={isManageModalOpen}
+        onClose={closeManageModal}
       />
       <LoginModal
         isOpen={isLoginModalOpen}

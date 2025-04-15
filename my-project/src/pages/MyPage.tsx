@@ -2,11 +2,11 @@ import Header from "../components/headers/Header";
 import { useState, useEffect } from "react";
 import { getInterviewResults, deleteInterviewResult } from "../api/resultAPI";
 import useNavigation from "../hooks/useNavigation"; // 경로는 실제 위치에 따라 조정
-
+// import ResumeManageModal from "../components/modals/ResumeManageModal";
 interface MyPageProps {
   openLoginModal: () => void;
   openSignupModal: () => void;
-  openUploadingModal: () => void;
+  openManageModal: () => void;
 }
 
 interface AnalysisResult {
@@ -15,7 +15,11 @@ interface AnalysisResult {
   resume: string;
 }
 
-const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
+const MyPage = ({
+  openLoginModal,
+  openSignupModal,
+  openManageModal,
+}: MyPageProps) => {
   const [results, setResults] = useState<AnalysisResult[]>([]);
   const [currentPage] = useState(1);
   const itemsPerPage = 7;
@@ -75,7 +79,7 @@ const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-gray-800">면접 기록</h1>
           <button
-            // onClick={openUploadingModal}
+            onClick={openManageModal}
             className="text-sm px-4 py-2 rounded-md bg-[#504d63] text-white hover:bg-[#4b2fe6] transition"
           >
             이력서 관리
