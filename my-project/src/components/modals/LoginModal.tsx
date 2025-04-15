@@ -9,15 +9,7 @@ interface LoginModalProps {
 }
 
 const LoginModal = ({ isOpen, onClose, onSignupClick }: LoginModalProps) => {
-  const {
-    email,
-    password,
-    setEmail,
-    setPassword,
-    login,
-    // loading,
-    // errorMessage,
-  } = useLogin();
+  const { email, password, setEmail, setPassword, login } = useLogin();
 
   const handleLogin = async () => {
     await login();
