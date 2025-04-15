@@ -23,6 +23,11 @@ function App() {
   const openSignupModal = () => setIsSignupModalOpen(true);
   const closeSignupModal = () => setIsSignupModalOpen(false);
 
+  const handleSignupSuccess = () => {
+    setIsSignupModalOpen(false); // 회원가입 모달 닫기
+    setIsLoginModalOpen(true); // 로그인 모달 열기
+  };
+
   return (
     <Router>
       <Routes>
@@ -65,8 +70,13 @@ function App() {
           openSignupModal();
         }}
       />
-      <SignupModal isOpen={isSignupModalOpen} onClose={closeSignupModal} />
+      <SignupModal
+        isOpen={isSignupModalOpen}
+        onClose={closeSignupModal}
+        onSuccess={handleSignupSuccess} // ⭐ 추가된 부분
+      />
     </Router>
   );
 }
+
 export default App;
