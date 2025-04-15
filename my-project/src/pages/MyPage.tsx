@@ -71,7 +71,16 @@ const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
       />
 
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6 text-gray-800">면접 기록</h1>
+        {/* 헤더 + 버튼 */}
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">면접 기록</h1>
+          <button
+            // onClick={openUploadingModal}
+            className="text-sm px-4 py-2 rounded-md bg-[#504d63] text-white hover:bg-[#4b2fe6] transition"
+          >
+            이력서 관리
+          </button>
+        </div>
 
         <div className="bg-white rounded-lg flex flex-col">
           {/* 헤더 */}
@@ -84,41 +93,49 @@ const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
 
           {/* 리스트 */}
           <div className="min-h-[400px]">
-            {currentItems.map((result, index) => (
-              <div
-                key={result.result_id}
-                className="grid grid-cols-12 gap-4 p-4 hover:bg-gray-50"
-              >
-                <div className="col-span-1 pl-8 text-gray-600">{index + 1}</div>
-                <div className="col-span-3 text-center text-gray-600">
-                  {result.create_at}
-                </div>
-                <div className="col-span-6 text-center text-gray-800">
-                  {result.resume}
-                </div>
-                <div className="col-span-2 text-center flex justify-center gap-2">
-                  <button
-                    className="px-4 py-1 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
-                    onClick={() => {
-                      console.log(
-                        "🔍 선택한 result_id:",
-                        result.result_id,
-                        result.create_at
-                      );
-                      goToArchivedReport(result.result_id, result.create_at);
-                    }}
-                  >
-                    결과 보기
-                  </button>
-                  <button
-                    className="px-4 py-1 text-sm text-red-600 border border-red-300 rounded-md hover:bg-red-50"
-                    onClick={() => handleDelete(result.result_id)}
-                  >
-                    삭제
-                  </button>
-                </div>
+            {currentItems.length === 0 ? (
+              <div className="flex pt-10 items-center justify-center h-full text-gray-500">
+                면접결과가 없습니다
               </div>
-            ))}
+            ) : (
+              currentItems.map((result, index) => (
+                <div
+                  key={result.result_id}
+                  className="grid grid-cols-12 gap-4 p-4 hover:bg-gray-50"
+                >
+                  <div className="col-span-1 pl-8 text-gray-600">
+                    {index + 1}
+                  </div>
+                  <div className="col-span-3 text-center text-gray-600">
+                    {result.create_at}
+                  </div>
+                  <div className="col-span-6 text-center text-gray-800">
+                    {result.resume}
+                  </div>
+                  <div className="col-span-2 text-center flex justify-center gap-2">
+                    <button
+                      className="px-4 py-1 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+                      onClick={() => {
+                        console.log(
+                          "🔍 선택한 result_id:",
+                          result.result_id,
+                          result.create_at
+                        );
+                        goToArchivedReport(result.result_id, result.create_at);
+                      }}
+                    >
+                      결과 보기
+                    </button>
+                    <button
+                      className="px-4 py-1 text-sm text-red-600 border border-red-300 rounded-md hover:bg-red-50"
+                      onClick={() => handleDelete(result.result_id)}
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
 
           {/* 페이지네이션 */}
