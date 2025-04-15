@@ -1,6 +1,6 @@
 import Header from "../components/headers/Header";
 import { useState, useEffect } from "react";
-import { getInterviewResults } from "../api/resultAPI";
+import { getInterviewResults, deleteInterviewResult } from "../api/resultAPI";
 import useNavigation from "../hooks/useNavigation"; // 경로는 실제 위치에 따라 조정
 
 interface MyPageProps {
@@ -48,6 +48,21 @@ const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
     currentPage * itemsPerPage
   );
 
+  // 삭제 함수 추가
+  const handleDelete = async (resultId: number) => {
+    if (window.confirm("정말로 이 결과를 삭제하시겠습니까?")) {
+      try {
+        console.log("🗑️ 삭제 요청할 result_id:", resultId);
+        await deleteInterviewResult(resultId);
+        setResults(results.filter((result) => result.result_id !== resultId));
+        alert("성공적으로 삭제되었습니다.");
+      } catch (error) {
+        console.error("결과 삭제 실패:", error);
+        alert("삭제 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header
@@ -81,7 +96,7 @@ const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
                 <div className="col-span-6 text-center text-gray-800">
                   {result.resume}
                 </div>
-                <div className="col-span-2 text-center">
+                <div className="col-span-2 text-center flex justify-center gap-2">
                   <button
                     className="px-4 py-1 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
                     onClick={() => {
@@ -94,6 +109,12 @@ const MyPage = ({ openLoginModal, openSignupModal }: MyPageProps) => {
                     }}
                   >
                     결과 보기
+                  </button>
+                  <button
+                    className="px-4 py-1 text-sm text-red-600 border border-red-300 rounded-md hover:bg-red-50"
+                    onClick={() => handleDelete(result.result_id)}
+                  >
+                    삭제
                   </button>
                 </div>
               </div>
