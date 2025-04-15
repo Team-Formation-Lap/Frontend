@@ -22,6 +22,7 @@ const ResumeManageModal = ({ isOpen, onClose }: ResumeManageModalProps) => {
     uploadCompleted,
     handleFileChange,
     handleUploadResume: originalHandleUploadResume,
+    resetUploadState,
   } = useResumeUpload(onClose);
 
   const [resumes, setResumes] = useState<Resume[]>([]);
@@ -39,6 +40,7 @@ const ResumeManageModal = ({ isOpen, onClose }: ResumeManageModalProps) => {
   const handleUploadResume = async () => {
     await originalHandleUploadResume();
     await fetchResumes(); // ✅ 업로드 후 리스트 새로고침
+    resetUploadState(); // ✅ 상태 초기화!
   };
 
   const handleDelete = async (resumeId: number) => {
