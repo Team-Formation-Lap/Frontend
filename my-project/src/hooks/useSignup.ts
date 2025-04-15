@@ -62,9 +62,6 @@ const useSignup = () => {
         nickname: name,
         password,
       });
-
-      alert("회원가입이 완료되었습니다.");
-      // 여기에 회원가입 성공 후 처리 (예: 모달 닫기, 로그인 페이지로 이동 등)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       alert("회원가입 중 오류가 발생했습니다.");

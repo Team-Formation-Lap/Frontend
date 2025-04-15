@@ -4,9 +4,10 @@ import useSignup from "../../hooks/useSignup";
 interface SignupModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess: () => void;
 }
 
-const SignupModal = ({ isOpen, onClose }: SignupModalProps) => {
+const SignupModal = ({ isOpen, onClose, onSuccess }: SignupModalProps) => {
   const {
     name,
     setName,
@@ -21,6 +22,16 @@ const SignupModal = ({ isOpen, onClose }: SignupModalProps) => {
     isEmailVerified,
     isLoading,
   } = useSignup();
+
+  const handleCompleteSignup = async () => {
+    try {
+      await handleSignup();
+      alert("회원가입이 완료되었습니다!");
+      onSuccess();
+    } catch {
+      // 에러 메시지는 이미 useSignup에서 처리됨
+    }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} width="w-[500px]" height="h-auto">
@@ -61,9 +72,7 @@ const SignupModal = ({ isOpen, onClose }: SignupModalProps) => {
                     isEmailVerified ? "border-2 border-green-500" : ""
                   }`}
                   value={email}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setEmail(e.target.value)
-                  }
+                  onChange={(e) => setEmail(e.target.value)}
                   disabled={isLoading || isEmailVerified}
                 />
                 {isEmailVerified && (
@@ -121,7 +130,7 @@ const SignupModal = ({ isOpen, onClose }: SignupModalProps) => {
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-[#5C3BFF] hover:bg-[#4b2fe6]"
           } text-white`}
-          onClick={handleSignup}
+          onClick={handleCompleteSignup}
           disabled={isLoading || !isEmailVerified}
         >
           {isLoading ? "처리 중..." : "회원가입"}

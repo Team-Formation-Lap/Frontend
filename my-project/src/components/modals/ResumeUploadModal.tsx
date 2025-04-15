@@ -1,6 +1,7 @@
 import Modal from "./Modal";
 import { IMAGES } from "../../utils/constants";
 import useResumeUpload from "../../hooks/useResumeUpload";
+import useAuthStore from "../../store/authStore";
 
 interface ResumeUploadModalProps {
   isOpen: boolean;
@@ -8,6 +9,7 @@ interface ResumeUploadModalProps {
 }
 
 const ResumeUploadModal = ({ isOpen, onClose }: ResumeUploadModalProps) => {
+  const { nickname } = useAuthStore();
   const {
     file,
     uploading,
@@ -26,7 +28,7 @@ const ResumeUploadModal = ({ isOpen, onClose }: ResumeUploadModalProps) => {
           className="w-32 h-32 mx-auto mt-5 rounded-full border-gray-300 mb-4"
         />
         <p className="text-3xl font-semibold mb-2 mt-2">
-          새로운 도전을 준비하는 <br /> 수여니님, 반갑습니다 :)
+          새로운 도전을 준비하는 <br /> {nickname}님, 반갑습니다 :)
         </p>
         <p className="text-gray-600 mb-4 mt-5 text-xl">
           맞춤형 면접 진행을 위해 <br />

@@ -31,12 +31,14 @@ export const useLogin = () => {
 
       const token = data.access;
       const userId = data.userId;
+      const nickname = data.nickname;
       // ✅ 콘솔 출력 추가
       console.log("✅ 로그인 성공");
       console.log("🔐 Access Token:", token);
       console.log("👤 User ID:", userId);
+      console.log("👤 Nickname:", nickname);
 
-      login(token, userId);
+      login(token, userId, nickname);
       localStorage.setItem("accessToken", token);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

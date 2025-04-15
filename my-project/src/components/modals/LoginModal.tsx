@@ -9,15 +9,7 @@ interface LoginModalProps {
 }
 
 const LoginModal = ({ isOpen, onClose, onSignupClick }: LoginModalProps) => {
-  const {
-    email,
-    password,
-    setEmail,
-    setPassword,
-    login,
-    // loading,
-    // errorMessage,
-  } = useLogin();
+  const { email, password, setEmail, setPassword, login } = useLogin();
 
   const handleLogin = async () => {
     await login();
@@ -25,6 +17,7 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }: LoginModalProps) => {
     if (token) {
       onClose(); // 로그인 성공 시 모달 닫기
     }
+    alert("로그인 되었습니다!");
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose} width="w-[500px]" height="h-auto">
