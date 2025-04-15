@@ -45,8 +45,8 @@ const useResumeUpload = (onClose: () => void) => {
 
   // 면접 시작 핸들러
   const handleStartInterviewClick = async () => {
-    if (!uploadCompleted) return;
-
+    // if (!uploadCompleted) return;
+    // console.log("uploadCompleted", uploadCompleted);
     try {
       const data = await startInterview();
       if (data?.interview_id) {
