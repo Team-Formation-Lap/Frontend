@@ -8,7 +8,7 @@ interface HeaderProps {
 }
 
 const Header = ({ handleLoginClick, handleSignupClick }: HeaderProps) => {
-  const { goToHome } = useNavigation();
+  const { goToHome, goToMyPage } = useNavigation();
   const { isLoggedIn, logout } = useAuthStore();
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const Header = ({ handleLoginClick, handleSignupClick }: HeaderProps) => {
                 로그아웃
               </button>
               <button
-                onClick={handleSignupClick}
+                onClick={goToMyPage}
                 className="px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
               >
                 마이페이지
