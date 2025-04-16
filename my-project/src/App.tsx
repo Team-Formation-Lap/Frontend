@@ -69,6 +69,10 @@ function App() {
       <ResumeManageModal
         isOpen={isManageModalOpen}
         onClose={closeManageModal}
+        onResumeSelected={() => {
+          closeManageModal();
+          closeUploadingModal();
+        }}
       />
       <LoginModal
         isOpen={isLoginModalOpen}

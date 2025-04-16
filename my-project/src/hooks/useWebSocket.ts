@@ -13,8 +13,9 @@ type VirtualInterviewerRef = React.RefObject<{
 }>;
 
 const useWebSocket = (
-  virtualInterviewerRef: VirtualInterviewerRef,
-  currentAudioRef: React.MutableRefObject<HTMLAudioElement | null>
+  virtualInterviewerRef: VirtualInterviewerRef | null,
+  currentAudioRef: React.MutableRefObject<HTMLAudioElement | null>,
+  enableVideoControl: boolean = true // ✅ 기본값은 true
 ) => {
   const { interviewId, setSocket } = useInterviewStore();
 
@@ -50,11 +51,15 @@ const useWebSocket = (
           currentAudioRef.current = audio;
 
           audio.play().then(() => {
-            virtualInterviewerRef.current?.playVideo();
+            if (enableVideoControl) {
+              virtualInterviewerRef?.current?.playVideo();
+            }
           });
 
           audio.addEventListener("ended", () => {
-            virtualInterviewerRef.current?.pauseVideo();
+            if (enableVideoControl) {
+              virtualInterviewerRef?.current?.pauseVideo();
+            }
             currentAudioRef.current = null;
           });
         } else if (data.message) {

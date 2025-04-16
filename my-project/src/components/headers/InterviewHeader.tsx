@@ -1,10 +1,9 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
 import useTimer from "../../hooks/useTimer";
 import useUploadInterviewVideo from "../../hooks/useUploadInterviewVideo";
 import { IMAGES } from "../../utils/constants";
-import useWebSocket from "../../hooks/useWebSocket";
+
 interface InterviewHeaderProps {
   socket: WebSocket | null;
   interviewId: number;
@@ -20,15 +19,8 @@ const InterviewHeader = ({
 }: InterviewHeaderProps) => {
   const navigate = useNavigate();
   const { timer, formatTime } = useTimer();
-  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
-  const virtualInterviewerRef = useRef<{
-    playVideo: () => void;
-    pauseVideo: () => void;
-  }>(null);
-  useWebSocket(virtualInterviewerRef, currentAudioRef);
 
   const { uploading, uploadVideo } = useUploadInterviewVideo(
-    currentAudioRef,
     videoChunksRef,
     interviewId,
     stopVideoRecording,

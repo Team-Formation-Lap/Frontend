@@ -35,7 +35,7 @@ const InterviewPage = () => {
   }, [location, setInterviewId]);
 
   // 웹소켓 연결 & 메시지 처리
-  useWebSocket(virtualInterviewerRef, currentAudioRef);
+  useWebSocket(virtualInterviewerRef, currentAudioRef, true); // or 생략해도 true
 
   // 영상 녹화 시작
   useEffect(() => {
