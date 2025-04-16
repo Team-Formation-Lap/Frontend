@@ -6,6 +6,7 @@ import axiosInstance from "../api/axiosInstance"; // ← 전역 인스턴스 사
 // import { InterviewId } from "../types"; // 필요시 타입 분리
 
 const useUploadInterviewVideo = (
+  currentAudioRef: React.MutableRefObject<HTMLAudioElement | null>, // ✅ 이렇게 받기
   videoChunksRef: React.RefObject<Blob[]>,
   interviewId: number,
   stopVideoRecording: () => void,
@@ -16,6 +17,12 @@ const useUploadInterviewVideo = (
 
   const uploadVideo = async () => {
     console.log("🛑 면접 종료 시도");
+    if (currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current = null;
+    }
+    console.log("currentAudioRef상태", currentAudioRef.current);
+
     setUploading(true);
     stopVideoRecording();
 
