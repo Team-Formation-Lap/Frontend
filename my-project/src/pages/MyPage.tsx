@@ -116,7 +116,7 @@ const MyPage = ({
                   className="grid grid-cols-12 gap-4 p-4 hover:bg-gray-50"
                 >
                   <div className="col-span-1 pl-8 text-gray-600">
-                    {index + 1}
+                    {(currentPage - 1) * itemsPerPage + index + 1}
                   </div>
                   <div className="col-span-3 text-center text-gray-600">
                     {result.create_at}
