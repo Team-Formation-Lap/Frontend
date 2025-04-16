@@ -14,62 +14,37 @@ const useVideoRecorder = () => {
   const videoChunksRef = useRef<Blob[]>([]);
 
   // 🎥 녹화 시작
-  const startVideoRecording = useCallback(
-    async (externalStream?: MediaStream) => {
-      if (videoRecording) {
-        console.warn("⚠️ 이미 녹화 중입니다! 중복 실행 방지됨.");
-        return;
-      }
-      setVideoRecording(true);
+  const startVideoRecording = useCallback(async () => {
+    if (videoRecording) {
+      console.warn("⚠️ 이미 녹화 중입니다! 중복 실행 방지됨.");
+      return;
+    }
+    setVideoRecording(true);
 
-      try {
-        // 웹캠과 마이크 스트림 가져오기
-        const cameraStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
 
-        // 외부 스트림이 있는 경우 오디오 트랙 결합
-        let combinedStream;
-        if (externalStream) {
-          const audioTracks = [
-            ...cameraStream.getAudioTracks(),
-            ...externalStream.getAudioTracks(),
-          ];
-          const videoTrack = cameraStream.getVideoTracks()[0];
-          combinedStream = new MediaStream([videoTrack, ...audioTracks]);
-        } else {
-          combinedStream = cameraStream;
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: "video/webm",
+      });
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          videoChunksRef.current.push(event.data);
         }
+      };
 
-        const mediaRecorder = new MediaRecorder(combinedStream, {
-          mimeType: "video/webm",
-        });
-
-        mediaRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            videoChunksRef.current.push(event.data);
-          }
-        };
-
-        // 녹화 중지 시 모든 스트림 정리
-        mediaRecorder.onstop = () => {
-          cameraStream.getTracks().forEach((track) => track.stop());
-          if (externalStream) {
-            externalStream.getTracks().forEach((track) => track.stop());
-          }
-        };
-
-        mediaRecorder.start();
-        videoMediaRecorderRef.current = mediaRecorder;
-        console.log("🎬 영상 녹화 시작");
-      } catch (error) {
-        console.error("❌ 영상 녹화 시작 실패:", error);
-        setVideoRecording(false);
-      }
-    },
-    [videoRecording, setVideoRecording]
-  );
+      mediaRecorder.start();
+      videoMediaRecorderRef.current = mediaRecorder;
+      setVideoRecording(true);
+      console.log("🎬 영상 녹화 시작");
+    } catch (error) {
+      console.error("❌ 영상 녹화 시작 실패:", error);
+    }
+  }, [videoRecording, setVideoRecording]);
 
   // ⏹ 녹화 종료
   const stopVideoRecording = () => {
