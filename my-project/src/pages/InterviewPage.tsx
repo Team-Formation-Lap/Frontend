@@ -45,7 +45,6 @@ const InterviewPage = () => {
   // 웹소켓 연결 상태에 따른 로딩 처리
   useEffect(() => {
     if (isConnected) {
-      console.log("🔄 InterviewPage: setLoading(true) - 웹소켓 연결됨");
       setLoading(true);
     }
   }, [isConnected, setLoading]);
@@ -58,7 +57,6 @@ const InterviewPage = () => {
       try {
         const data = JSON.parse(event.data);
         if (data.text && data.audio_url) {
-          console.log("🔄 InterviewPage: setLoading(false) - 질문 수신됨");
           setLoading(false);
         }
       } catch (err) {
