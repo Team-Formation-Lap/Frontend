@@ -21,7 +21,7 @@ const MyPage = ({
   openManageModal,
 }: MyPageProps) => {
   const [results, setResults] = useState<AnalysisResult[]>([]);
-  const [currentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
   const { goToArchivedReport } = useNavigation();
 
@@ -51,6 +51,14 @@ const MyPage = ({
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const totalPages = Math.ceil(results.length / itemsPerPage);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
 
   // 삭제 함수 추가
   const handleDelete = async (resultId: number) => {
@@ -145,19 +153,29 @@ const MyPage = ({
           {/* 페이지네이션 */}
           <div className="flex justify-center items-center p-4 mt-auto border-t">
             <button
-              disabled={true}
-              className="mx-1 px-3 py-1 rounded-md text-gray-400 cursor-not-allowed"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`mx-1 px-3 py-1 rounded-md ${
+                currentPage === 1
+                  ? "text-gray-400 cursor-not-allowed"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
             >
               &lt;
             </button>
 
             <button className="mx-1 px-3 py-1 rounded-md bg-[#5C3BFF] text-white">
-              1
+              {currentPage}
             </button>
 
             <button
-              disabled={true}
-              className="mx-1 px-3 py-1 rounded-md text-gray-400 cursor-not-allowed"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`mx-1 px-3 py-1 rounded-md ${
+                currentPage === totalPages
+                  ? "text-gray-400 cursor-not-allowed"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
             >
               &gt;
             </button>
