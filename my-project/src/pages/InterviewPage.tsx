@@ -18,7 +18,8 @@ const InterviewPage = () => {
   } | null>(null);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  const { interviewId, setInterviewId, recording } = useInterviewStore();
+  const { interviewId, setInterviewId, recording, setLoading, isLoading } =
+    useInterviewStore();
 
   const { startRecording, stopRecording } = useAudioRecorder();
   const {
@@ -35,7 +36,69 @@ const InterviewPage = () => {
   }, [location, setInterviewId]);
 
   // 웹소켓 연결 & 메시지 처리
-  useWebSocket(virtualInterviewerRef, currentAudioRef, true); // or 생략해도 true
+  const { socket, isConnected } = useWebSocket(
+    virtualInterviewerRef,
+    currentAudioRef,
+    true
+  );
+
+  // 웹소켓 연결 상태에 따른 로딩 처리
+  useEffect(() => {
+    if (isConnected) {
+      console.log("🔄 InterviewPage: setLoading(true) - 웹소켓 연결됨");
+      setLoading(true);
+    }
+  }, [isConnected, setLoading]);
+
+  // 메시지 수신 시 로딩 해제
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.text && data.audio_url) {
+          console.log("🔄 InterviewPage: setLoading(false) - 질문 수신됨");
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error("JSON 파싱 오류:", err);
+      }
+    };
+
+    socket.addEventListener("message", handleMessage);
+    return () => {
+      socket.removeEventListener("message", handleMessage);
+    };
+  }, [socket, setLoading]);
+
+  // 웹소켓 상태에 따른 로딩 처리
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleOpen = () => {
+      console.log("✅ 웹소켓 연결 성공!");
+      setLoading(true);
+    };
+
+    const handleError = (error: Event) => {
+      console.error("❌ 웹소켓 오류:", error);
+    };
+
+    const handleClose = () => {
+      console.log("🔌 웹소켓 연결 종료");
+    };
+
+    socket.addEventListener("open", handleOpen);
+    socket.addEventListener("error", handleError);
+    socket.addEventListener("close", handleClose);
+
+    return () => {
+      socket.removeEventListener("open", handleOpen);
+      socket.removeEventListener("error", handleError);
+      socket.removeEventListener("close", handleClose);
+    };
+  }, [socket, setLoading]);
 
   // 영상 녹화 시작
   useEffect(() => {
@@ -47,6 +110,18 @@ const InterviewPage = () => {
 
   return (
     <div className="flex flex-col h-screen">
+      {/* 로딩 오버레이 */}
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]">
+          <div className="flex flex-col items-center">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="mt-4 text-white text-lg">
+              질문을 생성하고 있습니다...
+            </p>
+          </div>
+        </div>
+      )}
+
       <div
         style={{
           position: "relative",
@@ -78,7 +153,7 @@ const InterviewPage = () => {
             <InterviewHeader
               interviewId={interviewId}
               stopVideoRecording={stopVideoRecording}
-              socket={useInterviewStore.getState().socket} // 전역 상태에서 socket 가져오기
+              socket={socket}
               videoChunksRef={videoChunksRef}
             />
           )}

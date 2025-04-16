@@ -4,7 +4,7 @@
 // 3. 가상 면접관 연동 : 음성 재생 시 playVideo(), 종료 시 pauseVideo() 호출
 // 4. 전역 socket 상태 저장 : Zustand에 socket 저장해서 어디서든 접근 가능
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useInterviewStore from "../store/useInterviewStore";
 
 type VirtualInterviewerRef = React.RefObject<{
@@ -17,7 +17,8 @@ const useWebSocket = (
   currentAudioRef: React.MutableRefObject<HTMLAudioElement | null>,
   enableVideoControl: boolean = true // ✅ 기본값은 true
 ) => {
-  const { interviewId, setSocket } = useInterviewStore();
+  const { interviewId, setSocket, socket } = useInterviewStore();
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     if (!interviewId) return;
@@ -29,8 +30,23 @@ const useWebSocket = (
 
     ws.onopen = () => {
       console.log("✅ 웹소켓 연결 성공!");
+      console.log("🔄 useWebSocket: isConnected = true");
+      setIsConnected(true);
     };
 
+    ws.onclose = () => {
+      console.log("🔌 웹소켓 연결 종료");
+      console.log("🔄 useWebSocket: isConnected = false");
+      setIsConnected(false);
+    };
+
+    ws.onerror = (error) => {
+      console.error("❌ 웹소켓 오류:", error);
+      console.log("🔄 useWebSocket: isConnected = false (오류 발생)");
+      setIsConnected(false);
+    };
+
+    // 오디오 재생 관련 로직만 처리
     ws.onmessage = (event) => {
       console.log("📩 서버 메시지 수신:", event.data);
 
@@ -62,28 +78,18 @@ const useWebSocket = (
             }
             currentAudioRef.current = null;
           });
-        } else if (data.message) {
-          console.log("💬 시스템 메시지:", data.message);
-        } else {
-          console.warn("⚠️ 알 수 없는 형식:", data);
         }
       } catch (err) {
         console.error("🛑 JSON 파싱 오류:", err);
       }
     };
 
-    ws.onerror = (error) => {
-      console.error("❌ 웹소켓 오류:", error);
-    };
-
-    ws.onclose = () => {
-      console.log("🔌 웹소켓 연결 종료");
-    };
-
     return () => {
       ws.close(); // 언마운트 시 종료
     };
   }, [interviewId, virtualInterviewerRef, currentAudioRef, setSocket]);
+
+  return { socket, isConnected };
 };
 
 export default useWebSocket;
