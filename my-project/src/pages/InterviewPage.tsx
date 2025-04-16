@@ -106,6 +106,18 @@ const InterviewPage = () => {
     }
   }, [videoRecording, startVideoRecording]);
 
+  // 답변 시작 시 로딩 상태 설정
+  const handleStartRecording = () => {
+    startRecording();
+    setLoading(false);
+  };
+
+  // 답변 종료 시 로딩 상태 유지
+  const handleStopRecording = () => {
+    stopRecording();
+    setLoading(true);
+  };
+
   return (
     <div className="flex flex-col h-screen">
       {/* 로딩 오버레이 */}
@@ -161,14 +173,14 @@ const InterviewPage = () => {
         <div style={{ position: "fixed", bottom: 20, right: 20, zIndex: 1100 }}>
           {!recording ? (
             <button
-              onClick={startRecording}
+              onClick={handleStartRecording}
               className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-lg font-semibold transition flex items-center gap-x-2"
             >
               🎤 <span>답변하기</span>
             </button>
           ) : (
             <button
-              onClick={stopRecording}
+              onClick={handleStopRecording}
               className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-lg font-semibold transition flex items-center gap-x-2"
             >
               ⏹ <span>답변마치기</span>
