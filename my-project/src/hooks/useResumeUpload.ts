@@ -12,6 +12,7 @@ const useResumeUpload = (onClose: () => void) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFile(event.target.files[0]);
+      setUploadCompleted(false); // 새로운 파일 선택 시 완료 상태 초기화
     }
   };
 
@@ -36,10 +37,16 @@ const useResumeUpload = (onClose: () => void) => {
     }
   };
 
+  // ✅ 업로드 상태 초기화 함수
+  const resetUploadState = () => {
+    setFile(null);
+    setUploadCompleted(false);
+  };
+
   // 면접 시작 핸들러
   const handleStartInterviewClick = async () => {
-    if (!uploadCompleted) return;
-
+    // if (!uploadCompleted) return;
+    // console.log("uploadCompleted", uploadCompleted);
     try {
       // 1. 면접 세션 시작
       const data = await startInterview();
@@ -109,6 +116,7 @@ const useResumeUpload = (onClose: () => void) => {
     handleFileChange,
     handleUploadResume,
     handleStartInterviewClick,
+    resetUploadState, // ✅ 외부에서 초기화 가능하게 export
   };
 };
 
