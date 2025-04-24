@@ -154,7 +154,7 @@ const ResumeManageModal = ({
             htmlFor="fileInput"
             className="bg-indigo-600 rounded-md hover:bg-indigo-700 tracking-widest text-white font-semibold px-6 py-3 transition cursor-pointer"
           >
-            {file ? file.name : "파일 선택"}
+            {file ? file.name : "파일 추가"}
           </label>
 
           <button
