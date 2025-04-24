@@ -94,7 +94,7 @@ const ResumeUploadModal = ({ isOpen, onClose }: ResumeUploadModalProps) => {
                 ? "bg-indigo-600 hover:bg-indigo-700"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
-            onClick={handleStartInterviewClick}
+            onClick={() => handleStartInterviewClick()}
             disabled={!uploadCompleted}
           >
             면접 시작

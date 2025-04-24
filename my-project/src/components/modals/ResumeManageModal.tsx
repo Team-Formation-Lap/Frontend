@@ -18,6 +18,7 @@ interface Resume {
 const ResumeManageModal = ({
   isOpen,
   onClose,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onResumeSelected,
 }: ResumeManageModalProps) => {
   const { nickname } = useAuthStore();
@@ -28,6 +29,7 @@ const ResumeManageModal = ({
     handleFileChange,
     handleUploadResume: originalHandleUploadResume,
     resetUploadState,
+    handleStartInterviewClick,
   } = useResumeUpload(onClose);
 
   const [resumes, setResumes] = useState<Resume[]>([]);
@@ -63,9 +65,9 @@ const ResumeManageModal = ({
     }
   };
 
-  const handleResumeSelect = (resumeId: number) => {
+  const handleInterviewStart = async (resumeId: number) => {
     setSelectedResumeId(resumeId);
-    onResumeSelected();
+    await handleStartInterviewClick(resumeId);
     onClose();
   };
 
@@ -111,7 +113,7 @@ const ResumeManageModal = ({
                           ? "bg-indigo-100"
                           : ""
                       }`}
-                      onClick={() => handleResumeSelect(resume.resume_id)}
+                      onClick={() => handleInterviewStart(resume.resume_id)}
                     >
                       선택
                     </button>

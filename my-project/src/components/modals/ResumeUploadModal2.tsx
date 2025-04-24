@@ -19,7 +19,6 @@ const ResumeUploadModal2 = ({ isOpen, onClose }: ResumeUploadModal2Props) => {
 
   const handleStartInterviewClick = () => {
     console.log("isResumeSelected", isResumeSelected);
-    if (!isResumeSelected) return;
     startInterview();
   };
 
@@ -62,7 +61,10 @@ const ResumeUploadModal2 = ({ isOpen, onClose }: ResumeUploadModal2Props) => {
               이력서를 변경하시겠어요?{" "}
               <button
                 className="text-[#6D5DFB] font-semibold hover:underline ml-1"
-                onClick={() => setIsResumeManageModalOpen(true)}
+                onClick={() => {
+                  setIsResumeManageModalOpen(true);
+                  onClose();
+                }}
               >
                 이력서 변경
               </button>
