@@ -109,7 +109,6 @@ const InterviewPage = () => {
   // 답변 시작 시 로딩 상태 설정
   const handleStartRecording = () => {
     startRecording();
-    setLoading(false);
   };
 
   // 답변 종료 시 로딩 상태 유지

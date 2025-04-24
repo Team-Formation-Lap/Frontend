@@ -2,9 +2,13 @@ import { IMAGES } from "../utils/constants";
 
 interface StartPageContentProps {
   handleStartClick: () => void;
+  handleStartClick2: () => void;
 }
 
-const StartPageContent = ({ handleStartClick }: StartPageContentProps) => {
+const StartPageContent = ({
+  handleStartClick,
+  handleStartClick2,
+}: StartPageContentProps) => {
   return (
     <main className="flex flex-1 items-center justify-center px-16 ">
       {/* 좌측 텍스트 & 버튼 */}
@@ -20,12 +24,25 @@ const StartPageContent = ({ handleStartClick }: StartPageContentProps) => {
           AI 모의면접 서비스
         </h2>
 
-        <button
-          className="px-8 py-3 font-museo text-lg font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 tracking-widest relative top-4"
-          onClick={handleStartClick}
-        >
-          면접 시작하기
-        </button>
+        <div className="pt-6 space-y-1">
+          <p className="text-sm font-semibold text-gray-600 ml-2">
+            Intelliview가 처음이라면?
+          </p>
+          <div className="flex gap-4">
+            <button
+              className="px-8 py-4 font-museo text-base font-semibold text-white bg-purple-400 rounded-md hover:bg-purple-500 tracking-widest"
+              onClick={handleStartClick}
+            >
+              이력서 등록하기
+            </button>
+            <button
+              className="px-6 font-museo text-base font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 tracking-widest"
+              onClick={handleStartClick2}
+            >
+              면접 바로 시작하기
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* 우측 이미지 */}
