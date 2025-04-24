@@ -41,36 +41,32 @@ const ResumeUploadModal2 = ({ isOpen, onClose }: ResumeUploadModal2Props) => {
             새로운 도전을 준비하는 <br /> {nickname}님, 반갑습니다 :)
           </p>
           <p className="text-gray-600 mb-4 mt-5 text-xl">
-            맞춤형 면접 진행을 위해 <br />
+            등록된 이력서를 통해 <br />
             <span className="bg-gradient-to-b from-[#312594] via-[#4F41CE] to-[#8072F8] text-transparent bg-clip-text tracking-wide font-bold">
-              이력서 등록
+              면접
             </span>
-            을 잊지 말아주세요.
+            을 바로 시작해요.
           </p>
 
-          {/* 이력서 선택하기 버튼 */}
-          <div className="flex justify-center gap-4 mt-4">
+          {/* 버튼 섹션 */}
+          <div className="flex flex-col items-center gap-3 mt-6">
             <button
-              className="bg-indigo-600 rounded-md hover:bg-indigo-700 tracking-widest text-white text-semibold px-6 py-3 transition cursor-pointer"
-              onClick={() => setIsResumeManageModalOpen(true)}
-            >
-              이력서 선택하기
-            </button>
-          </div>
-
-          {/* 면접 시작 버튼을 아래쪽에 배치 */}
-          <div className="mt-4 mb-4">
-            <button
-              className={`rounded-md tracking-widest text-white text-semibold px-5 py-2 transition ${
-                isResumeSelected
-                  ? "bg-indigo-600 hover:bg-indigo-700"
-                  : "bg-gray-400 cursor-not-allowed"
-              }`}
+              className="bg-[#6D5DFB] hover:bg-[#5c4ee0] rounded-md tracking-widest text-white font-semibold px-6 py-3 transition"
               onClick={handleStartInterviewClick}
-              // disabled={!isResumeSelected}
             >
-              면접 시작
+              면접 시작하기
             </button>
+
+            {/* 이력서 변경 텍스트 링크 스타일 */}
+            <p className="text-sm text-gray-500 font-semibold mt-2">
+              이력서를 변경하시겠어요?{" "}
+              <button
+                className="text-[#6D5DFB] font-semibold hover:underline ml-1"
+                onClick={() => setIsResumeManageModalOpen(true)}
+              >
+                이력서 변경
+              </button>
+            </p>
           </div>
         </div>
       </Modal>
