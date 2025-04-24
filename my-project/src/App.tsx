@@ -7,6 +7,7 @@ import ArchivedReportPage from "./pages/ArchivedReportPage";
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ResumeUploadModal from "./components/modals/ResumeUploadModal";
+import ResumeUploadModal2 from "./components/modals/ResumeUploadModal2";
 import ResumeManageModal from "./components/modals/ResumeManageModal";
 import LoginModal from "./components/modals/LoginModal";
 import SignupModal from "./components/modals/SignupModal";
@@ -14,12 +15,15 @@ import MyPage from "./pages/MyPage";
 
 function App() {
   const [isUploadingModalOpen, setIsUploadingModalOpen] = useState(false);
+  const [isUploadingModalOpen2, setIsUploadingModalOpen2] = useState(false);
   const [isManageModalOpen, setIsManageModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
   const openUploadingModal = () => setIsUploadingModalOpen(true);
   const closeUploadingModal = () => setIsUploadingModalOpen(false);
+  const openUploadingModal2 = () => setIsUploadingModalOpen2(true);
+  const closeUploadingModal2 = () => setIsUploadingModalOpen2(false);
   const openLoginModal = () => setIsLoginModalOpen(true);
   const closeLoginModal = () => setIsLoginModalOpen(false);
   const openSignupModal = () => setIsSignupModalOpen(true);
@@ -40,6 +44,7 @@ function App() {
           element={
             <StartPage
               openUploadingModal={openUploadingModal}
+              openUploadingModal2={openUploadingModal2}
               openLoginModal={openLoginModal}
               openSignupModal={openSignupModal}
             />
@@ -66,6 +71,10 @@ function App() {
         isOpen={isUploadingModalOpen}
         onClose={closeUploadingModal}
       />
+      <ResumeUploadModal2
+        isOpen={isUploadingModalOpen2}
+        onClose={closeUploadingModal2}
+      />
       <ResumeManageModal
         isOpen={isManageModalOpen}
         onClose={closeManageModal}
@@ -85,7 +94,7 @@ function App() {
       <SignupModal
         isOpen={isSignupModalOpen}
         onClose={closeSignupModal}
-        onSuccess={handleSignupSuccess} // ⭐ 추가된 부분
+        onSuccess={handleSignupSuccess}
       />
     </Router>
   );

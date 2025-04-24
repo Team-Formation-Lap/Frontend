@@ -37,19 +37,21 @@ const useResumeUpload = (onClose: () => void) => {
     }
   };
 
-  // ✅ 업로드 상태 초기화 함수
+  // 업로드 상태 초기화 함수
   const resetUploadState = () => {
     setFile(null);
     setUploadCompleted(false);
   };
 
   // 면접 시작 핸들러
-  const handleStartInterviewClick = async () => {
-    // if (!uploadCompleted) return;
-    // console.log("uploadCompleted", uploadCompleted);
+  const handleStartInterviewClick = async (resumeId?: number) => {
+    console.log("면접 시작 함수 호출됨, resumeId:", resumeId);
     try {
-      const data = await startInterview();
+      console.log("📡 startInterview API 호출 시도...");
+      const data = await startInterview(resumeId);
+      console.log("API 응답 데이터:", data);
       if (data?.interview_id) {
+        console.log("면접 페이지로 이동, interview_id:", data.interview_id);
         goToInterview(data.interview_id);
         onClose();
       }
@@ -65,7 +67,7 @@ const useResumeUpload = (onClose: () => void) => {
     handleFileChange,
     handleUploadResume,
     handleStartInterviewClick,
-    resetUploadState, // ✅ 외부에서 초기화 가능하게 export
+    resetUploadState,
   };
 };
 
