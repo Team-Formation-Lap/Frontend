@@ -1,25 +1,25 @@
 import { useState, useEffect } from "react";
 
 import Header from "../components/headers/Header";
-import ComprehensiveReport from "../components/reports/ComprehensiveReport";
-// import ComprehensiveReport_design from "../components/reports/ComprehensiveReport_design";
-// import QuestionReport_design from "../components/reports/QuestionReport_design";
-import QuestionReport from "../components/reports/QuestionReport";
-// import BehaviorReport_design from "../components/reports/BehaviorReport_design";
-import BehaviorReport from "../components/reports/BehaviorReport";
+// import ComprehensiveReport from "../components/reports/ComprehensiveReport";
+import ComprehensiveReport_design from "../components/reports/ComprehensiveReport_design";
+import QuestionReport_design from "../components/reports/QuestionReport_design";
+// import QuestionReport from "../components/reports/QuestionReport";
+import BehaviorReport_design from "../components/reports/BehaviorReport_design";
+// import BehaviorReport from "../components/reports/BehaviorReport";
 import "../index.css";
 import { FaFilePdf } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
 
-const ReportPage = () => {
+const DesignPage = () => {
   const location = useLocation();
   const interviewId = location.state?.interviewId;
-  const [reportData, setReportData] = useState({
-    comprehensiveFeedback: "",
-    questionFeedback: "",
-    behaviorFeedback: "",
-  });
+  // const [reportData, setReportData] = useState({
+  //   comprehensiveFeedback: "",
+  //   questionFeedback: "",
+  //   behaviorFeedback: "",
+  // });
   const [activeTab, setActiveTab] = useState<
     "comprehensive" | "question" | "behavior"
   >("comprehensive");
@@ -47,11 +47,11 @@ const ReportPage = () => {
         );
 
         console.log("API response:", response.data);
-        setReportData({
-          comprehensiveFeedback: response.data.feedback["종합피드백"] || "",
-          questionFeedback: response.data.feedback["답변피드백"] || "",
-          behaviorFeedback: response.data.feedback["행동피드백"] || "",
-        });
+        // setReportData({
+        //   comprehensiveFeedback: response.data.feedback["종합피드백"] || "",
+        //   questionFeedback: response.data.feedback["답변피드백"] || "",
+        //   behaviorFeedback: response.data.feedback["행동피드백"] || "",
+        // });
       } catch (error) {
         console.error("Error fetching report data:", error);
       }
@@ -63,16 +63,11 @@ const ReportPage = () => {
   const renderContent = () => {
     switch (activeTab) {
       case "comprehensive":
-        return (
-          <ComprehensiveReport feedback={reportData.comprehensiveFeedback} />
-        );
-      // return <ComprehensiveReport_design />;
+        return <ComprehensiveReport_design />;
       case "question":
-        return <QuestionReport feedback={reportData.questionFeedback} />;
-      // return <QuestionReport_design />;
+        return <QuestionReport_design />;
       case "behavior":
-        return <BehaviorReport feedback={reportData.behaviorFeedback} />;
-      // return <BehaviorReport_design />;
+        return <BehaviorReport_design />;
       default:
         return null;
     }
@@ -131,4 +126,4 @@ const ReportPage = () => {
   );
 };
 
-export default ReportPage;
+export default DesignPage;
