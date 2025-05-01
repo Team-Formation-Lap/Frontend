@@ -1,3 +1,5 @@
+import interviewVideo_song from "../../assets/interviewVideo_song.webm";
+
 const BehaviorReport_design = () => {
   const feedbackList = [
     {
@@ -27,10 +29,7 @@ const BehaviorReport_design = () => {
             controls
             poster="https://via.placeholder.com/800x450.png?text=Video+Thumbnail"
           >
-            <source
-              src="https://www.w3schools.com/html/mov_bbb.mp4"
-              type="video/mp4"
-            />
+            <source src={interviewVideo_song} type="video/mp4" />
             사용 중인 브라우저는 비디오 태그를 지원하지 않습니다.
           </video>
         </div>

@@ -1,3 +1,5 @@
+import interviewVideo_song from "../../assets/interviewVideo_song.webm";
+
 const ComprehensiveReport_design = () => {
   return (
     <div className="bg-white mx-16 my-12 py-4 shadow-md rounded-md">
@@ -9,7 +11,7 @@ const ComprehensiveReport_design = () => {
             <video
               controls
               className="w-full rounded-md shadow"
-              src="https://www.w3schools.com/html/mov_bbb.mp4"
+              src={interviewVideo_song}
             />
           </div>
 
