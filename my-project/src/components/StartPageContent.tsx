@@ -33,7 +33,7 @@ const StartPageContent = ({
               className="px-8 py-4 font-museo text-base font-semibold text-white bg-purple-400 rounded-md hover:bg-purple-500 tracking-widest"
               onClick={handleStartClick}
             >
-              이력서 등록하기
+              지원서 등록하기
             </button>
             <button
               className="px-6 font-museo text-base font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 tracking-widest"
