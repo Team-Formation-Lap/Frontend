@@ -59,7 +59,7 @@ const ResumeManageModal = ({
       await axiosInstance.delete(`/resumes/delete/${resumeId}`);
       await fetchResumes();
     } catch (error) {
-      console.error("이력서 삭제 실패:", error);
+      console.error("지원서 삭제 실패:", error);
     } finally {
       setDeletingId(null);
     }
@@ -91,7 +91,7 @@ const ResumeManageModal = ({
                   NO
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  이력서 제목
+                  지원서 제목
                 </th>
                 <th scope="col" className="px-6 py-3 text-center">
                   선택
@@ -174,7 +174,7 @@ const ResumeManageModal = ({
               ? "업로드 중..."
               : uploadCompleted
               ? "업로드 완료"
-              : "이력서 업로드"}
+              : "지원서 업로드"}
           </button>
         </div>
       </div>

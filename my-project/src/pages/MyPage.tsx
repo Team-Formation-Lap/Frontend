@@ -90,7 +90,7 @@ const MyPage = ({
             onClick={openManageModal}
             className="text-sm px-4 py-2 rounded-md bg-[#504d63] text-white hover:bg-[#4b2fe6] transition"
           >
-            이력서 관리
+            지원서 관리
           </button>
         </div>
 
