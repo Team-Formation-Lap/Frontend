@@ -75,8 +75,6 @@ const questionData = [
 const QuestionReport_design = () => {
   return (
     <div className="bg-white mx-16 my-12 py-4 shadow-md rounded-md ">
-      {/* 차트 */}
-      <QuestionScoreChart />
       {questionData.map((q) => (
         <div key={q.id} className="p-4 space-y-6 mx-12">
           {/* 질문 */}
