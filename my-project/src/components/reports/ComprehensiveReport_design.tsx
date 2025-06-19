@@ -34,7 +34,7 @@ const ComprehensiveReport_design = () => {
               {/* 비디오 자리 */}
               <video
                 controls
-                className="w-full h-64 bg-black rounded-md shadow flex items-center justify-center text-white"
+                className="w-full h-80 bg-black rounded-md shadow flex items-center justify-center text-white"
               >
                 비디오 자리 src={interviewVideo_song}
               </video>
@@ -43,7 +43,7 @@ const ComprehensiveReport_design = () => {
 
           {/* 오른쪽: 차트 자리 */}
           <div className="w-1/2 flex items-center justify-center">
-            <div className="w-5/6 h-[500px] bg-gray-100 rounded-xl shadow-inner flex items-center justify-center text-gray-400 text-xl">
+            <div className="w-5/6 h-[500px] mt-20 bg-gray-100 rounded-xl shadow-inner flex items-center justify-center text-gray-400 text-xl">
               차트 영역 (예: 레이더 차트)
             </div>
           </div>
