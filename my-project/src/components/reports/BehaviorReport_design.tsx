@@ -20,7 +20,7 @@ const BehaviorReport_design = () => {
   ];
 
   return (
-    <div className="bg-white mx-16 my-12 py-4 shadow-md rounded-md ">
+    <div className="bg-white mx-8 my-8 py-4 shadow-md rounded-md ">
       <div className="p-4 space-y-6 mx-12">
         {/* 영상 플레이어 */}
         <div className="w-full mb-6">

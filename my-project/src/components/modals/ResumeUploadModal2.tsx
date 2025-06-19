@@ -58,7 +58,7 @@ const ResumeUploadModal2 = ({ isOpen, onClose }: ResumeUploadModal2Props) => {
 
             {/* 이력서 변경 텍스트 링크 스타일 */}
             <p className="text-sm text-gray-500 font-semibold mt-2">
-              이력서를 변경하시겠어요?{" "}
+              지원서를 변경하시겠어요?{" "}
               <button
                 className="text-[#6D5DFB] font-semibold hover:underline ml-1"
                 onClick={() => {
@@ -66,7 +66,7 @@ const ResumeUploadModal2 = ({ isOpen, onClose }: ResumeUploadModal2Props) => {
                   onClose();
                 }}
               >
-                이력서 변경
+                지원서 변경
               </button>
             </p>
           </div>

@@ -35,7 +35,7 @@ const ResumeUploadModal = ({ isOpen, onClose }: ResumeUploadModalProps) => {
         <p className="text-gray-600 mb-4 mt-5 text-xl">
           맞춤형 면접 진행을 위해 <br />
           <span className="bg-gradient-to-b from-[#312594] via-[#4F41CE] to-[#8072F8] text-transparent bg-clip-text tracking-wide font-bold">
-            이력서 등록
+            지원서 등록
           </span>
           을 잊지 말아주세요.
         </p>
