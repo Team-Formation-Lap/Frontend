@@ -1,6 +1,30 @@
 import interviewVideo_song from "../../assets/interviewVideo_song.webm";
+import RadarChart from "./RadarChart.tsx";
+// import React, { useEffect } from "react";
+import {
+  Chart,
+  RadarController,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Legend,
+  Tooltip,
+} from "chart.js";
 
+// 컴포넌트 등록
+Chart.register(
+  RadarController,
+  RadialLinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Legend,
+  Tooltip
+);
 const ComprehensiveReport_design = () => {
+  // 실제 점수 데이터(0~100)를 API 호출 등으로 받아오면 여기서 상태 관리
+  const interviewScores = [15, 17, 18, 10, 15];
   return (
     <div className="bg-white mx-8 my-8 py-4 shadow-md rounded-md">
       <div className="p-4 space-y-6 mx-12">
@@ -43,8 +67,8 @@ const ComprehensiveReport_design = () => {
 
           {/* 오른쪽: 차트 자리 */}
           <div className="w-1/2 flex items-center justify-center">
-            <div className="w-5/6 h-[500px] mt-20 bg-gray-100 rounded-xl shadow-inner flex items-center justify-center text-gray-400 text-xl">
-              차트 영역 (예: 레이더 차트)
+            <div className="w-5/6 h-[450px] mt-32 rounded-xl  border-2 border-gray-100 flex items-center justify-center p-2">
+              <RadarChart interview={interviewScores} />
             </div>
           </div>
         </div>
