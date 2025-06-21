@@ -15,13 +15,13 @@ const useUploadInterviewVideo = (
   const navigate = useNavigate();
 
   const uploadVideo = async () => {
-    console.log("🛑 면접 종료 시도");
+    console.log("면접 종료 시도");
     setUploading(true);
     stopVideoRecording();
 
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.close();
-      console.log("🔌 웹소켓 연결 종료됨.");
+      console.log("웹소켓 연결 종료됨.");
     }
 
     await new Promise((resolve) => setTimeout(resolve, 1000)); // 딜레이
@@ -36,7 +36,7 @@ const useUploadInterviewVideo = (
     }
 
     if (!videoChunksRef.current || videoChunksRef.current.length === 0) {
-      console.error("❌ 녹화된 영상 없음");
+      console.error("녹화된 영상 없음");
       setUploading(false);
       return;
     }
@@ -55,15 +55,15 @@ const useUploadInterviewVideo = (
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
+      // 여기서 영상 업로드에 성공하면 네비게이션 처리 -> 리포트 페이지로 이동
       if (res.status === 201) {
-        console.log("✅ 영상 업로드 성공");
+        console.log("영상 업로드 성공");
         navigate("/report", { state: { interviewId } });
       } else {
-        console.error("❌ 업로드 실패", res);
+        console.error("업로드 실패", res);
       }
     } catch (err) {
-      console.error("❌ 업로드 중 오류", err);
+      console.error("업로드 중 오류", err);
     } finally {
       setUploading(false);
     }
