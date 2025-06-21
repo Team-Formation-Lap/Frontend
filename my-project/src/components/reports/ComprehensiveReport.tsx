@@ -1,5 +1,7 @@
 import interviewVideo_song from "../../assets/interviewVideo_song.webm";
 import RadarChart from "./RadarChart.tsx";
+import useAuthStore from "../../store/authStore";
+
 // import React, { useEffect } from "react";
 import {
   Chart,
@@ -26,6 +28,8 @@ Chart.register(
 const ComprehensiveReport = ({ feedback }: { feedback: string }) => {
   // 실제 점수 데이터(0~100)를 API 호출 등으로 받아오면 여기서 상태 관리할것
   const interviewScores = [15, 17, 18, 10, 15];
+  const { nickname } = useAuthStore();
+
   return (
     <div className="bg-white mx-8 my-8 py-4 shadow-md rounded-md">
       <div className="p-4 space-y-6 mx-12">
@@ -37,7 +41,7 @@ const ComprehensiveReport = ({ feedback }: { feedback: string }) => {
                 새로운 도전을 하는
               </p>
               <h1 className="text-4xl font-black mt-1 ">
-                신수진님의 첫 번째 면접
+                {nickname}님의 첫 번째 면접
               </h1>
             </div>
 
