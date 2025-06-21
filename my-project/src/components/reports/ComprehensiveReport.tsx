@@ -1,4 +1,4 @@
-import interviewVideo_song from "../../assets/interviewVideo_song.webm";
+// import interviewVideo_song from "../../assets/interviewVideo_song.webm";
 import RadarChart from "./RadarChart.tsx";
 import useAuthStore from "../../store/authStore";
 
@@ -24,8 +24,14 @@ Chart.register(
   Legend,
   Tooltip
 );
-
-const ComprehensiveReport = ({ feedback }: { feedback: string }) => {
+interface ComprehensiveReportProps {
+  feedback: string;
+  videoUrl: string;
+}
+const ComprehensiveReport = ({
+  feedback,
+  videoUrl,
+}: ComprehensiveReportProps) => {
   // 실제 점수 데이터(0~100)를 API 호출 등으로 받아오면 여기서 상태 관리할것
   const interviewScores = [15, 17, 18, 10, 15];
   const { nickname } = useAuthStore();
@@ -54,12 +60,16 @@ const ComprehensiveReport = ({ feedback }: { feedback: string }) => {
 
             <div className="mt-4">
               {/* 비디오 자리 */}
-              <video
-                controls
-                className="w-full h-80 bg-black rounded-md shadow flex items-center justify-center text-white"
-              >
-                비디오 자리 src={interviewVideo_song}
-              </video>
+
+              {videoUrl ? (
+                <video
+                  controls
+                  src={videoUrl}
+                  className="w-full h-80 bg-black rounded-md shadow flex items-center justify-center"
+                />
+              ) : (
+                <div className="text-gray-500">비디오가 없습니다.</div>
+              )}
             </div>
           </div>
 
