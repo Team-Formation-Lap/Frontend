@@ -18,13 +18,15 @@ const ReportPage = () => {
   const [reportData, setReportData] = useState({
     comprehensiveFeedback: "",
     questionFeedback: "",
-    behaviorFeedback: "",
+    behaviorFeedback: "", // ← 이 줄 추가
+    videoUrl: "",
   });
   const [activeTab, setActiveTab] = useState<
     "comprehensive" | "question" | "behavior"
   >("comprehensive");
   const dummyDate = "2025년 01월 26일 21시 30분";
 
+  // 면접 결과 생성 API 호출
   useEffect(() => {
     const fetchReports = async () => {
       if (!interviewId) return;
@@ -51,6 +53,7 @@ const ReportPage = () => {
           comprehensiveFeedback: response.data.feedback["종합피드백"] || "",
           questionFeedback: response.data.feedback["답변피드백"] || "",
           behaviorFeedback: response.data.feedback["행동피드백"] || "",
+          videoUrl: response.data.video_url || "",
         });
       } catch (error) {
         console.error("Error fetching report data:", error);
@@ -64,7 +67,10 @@ const ReportPage = () => {
     switch (activeTab) {
       case "comprehensive":
         return (
-          <ComprehensiveReport feedback={reportData.comprehensiveFeedback} />
+          <ComprehensiveReport
+            feedback={reportData.comprehensiveFeedback}
+            videoUrl={reportData.videoUrl}
+          />
         );
       // return <ComprehensiveReport_design />;
       case "question":

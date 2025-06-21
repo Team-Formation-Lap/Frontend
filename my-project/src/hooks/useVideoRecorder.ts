@@ -13,10 +13,10 @@ const useVideoRecorder = () => {
   const videoMediaRecorderRef = useRef<MediaRecorder | null>(null);
   const videoChunksRef = useRef<Blob[]>([]);
 
-  // 🎥 녹화 시작
+  // 녹화 시작
   const startVideoRecording = useCallback(async () => {
     if (videoRecording) {
-      console.warn("⚠️ 이미 녹화 중입니다! 중복 실행 방지됨.");
+      console.warn("이미 녹화 중입니다! 중복 실행 방지됨.");
       return;
     }
     setVideoRecording(true);
@@ -40,18 +40,18 @@ const useVideoRecorder = () => {
       mediaRecorder.start();
       videoMediaRecorderRef.current = mediaRecorder;
       setVideoRecording(true);
-      console.log("🎬 영상 녹화 시작");
+      console.log("영상 녹화 시작");
     } catch (error) {
-      console.error("❌ 영상 녹화 시작 실패:", error);
+      console.error("영상 녹화 시작 실패:", error);
     }
   }, [videoRecording, setVideoRecording]);
 
-  // ⏹ 녹화 종료
+  // 녹화 종료
   const stopVideoRecording = () => {
     if (videoMediaRecorderRef.current) {
       videoMediaRecorderRef.current.stop();
       videoMediaRecorderRef.current.onstop = () => {
-        console.log("🎞️ 영상 녹화 완료. 저장 준비 완료");
+        console.log("영상 녹화 완료. 저장 준비 완료");
         // videoChunksRef.current에 녹화된 영상이 있음
       };
       setVideoRecording(false);

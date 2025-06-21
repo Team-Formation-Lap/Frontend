@@ -21,6 +21,7 @@ const ArchivedReportPage = () => {
     behaviorFeedback: "",
     answerFeedback: "",
     questionPairs: [],
+    videoUrl: "",
   });
   const [activeTab, setActiveTab] = useState<
     "comprehensive" | "question" | "behavior"
@@ -52,6 +53,7 @@ const ArchivedReportPage = () => {
           behaviorFeedback: data.behavior_feedback,
           answerFeedback: data.answer_feedback,
           questionPairs: data.qna_pair || [],
+          videoUrl: data.video_url ?? "", // ← 추가
         });
       } catch (error) {
         console.error("📛 결과 조회 실패:", error);
@@ -64,7 +66,12 @@ const ArchivedReportPage = () => {
   const renderContent = () => {
     switch (activeTab) {
       case "comprehensive":
-        return <ComprehensiveReport feedback={reportData.overallFeedback} />;
+        return (
+          <ComprehensiveReport
+            feedback={reportData.overallFeedback}
+            videoUrl={reportData.videoUrl}
+          />
+        );
       case "question":
         return <QuestionReport feedback={reportData.answerFeedback} />;
       case "behavior":
