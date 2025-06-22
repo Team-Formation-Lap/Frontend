@@ -11,14 +11,29 @@ import "../index.css";
 import { FaFilePdf } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
+import { toQAItems } from "../hooks/useToQAItems";
+// 1) 먼저 QAItem 타입이 이미 선언돼 있다고 가정
+export interface QAItem {
+  id: number;
+  question: string;
+  answer: string;
+  feedback: string[];
+}
 
+// 2) reportData 전체 구조 정의
+interface ReportData {
+  comprehensiveFeedback: string;
+  questionFeedback: QAItem[];
+  behaviorFeedback: string;
+  videoUrl: string;
+}
 const ReportPage = () => {
   const location = useLocation();
   const interviewId = location.state?.interviewId;
-  const [reportData, setReportData] = useState({
+  const [reportData, setReportData] = useState<ReportData>({
     comprehensiveFeedback: "",
-    questionFeedback: "",
-    behaviorFeedback: "", // ← 이 줄 추가
+    questionFeedback: [],
+    behaviorFeedback: "",
     videoUrl: "",
   });
   const [activeTab, setActiveTab] = useState<
@@ -49,9 +64,10 @@ const ReportPage = () => {
         );
 
         console.log("API response:", response.data);
+        const rawQA = response.data.feedback["답변피드백"] ?? [];
         setReportData({
           comprehensiveFeedback: response.data.feedback["종합피드백"] || "",
-          questionFeedback: response.data.feedback["답변피드백"] || "",
+          questionFeedback: toQAItems(rawQA),
           behaviorFeedback: response.data.feedback["행동피드백"] || "",
           videoUrl: response.data.video_url || "",
         });
@@ -74,7 +90,7 @@ const ReportPage = () => {
         );
       // return <ComprehensiveReport_design />;
       case "question":
-        return <QuestionReport feedback={reportData.questionFeedback} />;
+        return <QuestionReport items={reportData.questionFeedback} />;
       // return <QuestionReport_design />;
       case "behavior":
         return <BehaviorReport feedback={reportData.behaviorFeedback} />;

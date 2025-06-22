@@ -73,7 +73,7 @@ const ArchivedReportPage = () => {
           />
         );
       case "question":
-        return <QuestionReport feedback={reportData.answerFeedback} />;
+        return <QuestionReport items={reportData.questionFeedback} />;
       case "behavior":
         return <BehaviorReport feedback={reportData.behaviorFeedback} />;
       default:
