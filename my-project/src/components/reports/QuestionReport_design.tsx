@@ -34,41 +34,6 @@ const questionData = [
       "추가로, 상태 변화와 useRef의 차이를 비교해도 좋습니다.",
     ],
   },
-  {
-    id: 4,
-    question: "Q4. 디자인 시스템이 무엇이며, 왜 도입해야 하는지 설명해주세요.",
-    answer:
-      "디자인 시스템은 일관된 UI를 만들기 위한 컴포넌트, 가이드, 패턴의 집합입니다. 팀원 간 협업 시 일관성을 유지하고, UI 개발 속도를 높일 수 있으며, 유지보수도 쉬워집니다.",
-    feedback: [
-      "디자인 시스템의 정의와 장점을 잘 설명하셨습니다.",
-      "실제 경험을 바탕으로 도입 시의 변화가 있으면 더 좋습니다.",
-      "구성 요소(예: 색상, 타이포그래피, 컴포넌트 등)에 대해 언급해보세요.",
-    ],
-  },
-  {
-    id: 5,
-    question:
-      "Q5. React 프로젝트에서 코드 스플리팅을 사용하는 이유는 무엇인가요?",
-    answer:
-      "코드 스플리팅은 필요한 시점에 필요한 코드만 불러오기 위해 사용합니다. 초기 로딩 속도를 줄이고, 사용자 경험을 개선할 수 있습니다.",
-    feedback: [
-      "코드 스플리팅의 목적을 명확히 설명하셨습니다.",
-      "React.lazy와 Suspense와 함께 사용하는 예시를 추가해보세요.",
-      "실제 프로젝트에서 적용했던 경험을 곁들이면 좋습니다.",
-    ],
-  },
-  {
-    id: 6,
-    question:
-      "Q6. React 컴포넌트의 재사용성을 높이기 위한 방법을 설명해주세요.",
-    answer:
-      "컴포넌트의 역할을 명확히 나누고, props를 통해 유연하게 조절할 수 있도록 설계합니다. 또한, 공통 로직은 커스텀 훅으로 분리하여 재사용성을 높입니다.",
-    feedback: [
-      "컴포넌트 구조 설계에 대한 이해도가 드러납니다.",
-      "props 기반 설계의 중요성을 잘 언급하셨습니다.",
-      "더 구체적인 사례나 커스텀 훅 예시를 들면 좋습니다.",
-    ],
-  },
 ];
 
 const QuestionReport_design = () => {
@@ -77,7 +42,7 @@ const QuestionReport_design = () => {
       {questionData.map((q) => (
         <div key={q.id} className="p-4 space-y-6 mx-12">
           {/* 질문 */}
-          <div className="bg-[#7067C1] px-4 py-3 mx-16 rounded-2xl text-white font-semibold tracking-wider">
+          <div className="bg-[rgb(112,103,193)] px-4 py-3 mx-16 rounded-2xl text-white font-semibold tracking-wider">
             {q.question}
           </div>
 
