@@ -8,6 +8,22 @@ import "../index.css";
 import { FaFilePdf } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
+import { toQAItems } from "../hooks/useToQAItems";
+
+export interface QAItem {
+  id: number;
+  question: string;
+  answer: string;
+  feedback: string[];
+}
+
+// 2) reportData 전체 구조 정의
+interface ReportData {
+  overallFeedback: string;
+  answerFeedback: QAItem[];
+  behaviorFeedback: string;
+  videoUrl: string;
+}
 
 const ArchivedReportPage = () => {
   const location = useLocation();
@@ -16,13 +32,14 @@ const ArchivedReportPage = () => {
 
   const create_at = location.state?.create_at;
   console.log("create_at", { create_at });
-  const [reportData, setReportData] = useState({
+
+  const [reportData, setReportData] = useState<ReportData>({
     overallFeedback: "",
     behaviorFeedback: "",
-    answerFeedback: "",
-    questionPairs: [],
+    answerFeedback: [],
     videoUrl: "",
   });
+
   const [activeTab, setActiveTab] = useState<
     "comprehensive" | "question" | "behavior"
   >("comprehensive");
@@ -39,21 +56,48 @@ const ArchivedReportPage = () => {
   };
   const formattedDate = create_at ? formatDateTime(create_at) : "";
   console.log("날짜", { formattedDate });
+
   useEffect(() => {
     const fetchReport = async () => {
       if (!resultId) return;
 
       try {
         const response = await axiosInstance.get(`/results/${resultId}`);
+        // const data = response.data;
+        // const rawQA = data.answer_feedback;
+        // ① 전체 HTTP 응답 객체
+        console.log("[DEBUG] axios response ➜", response);
+
+        // ② 서버가 보낸 실제 데이터(payload)
         const data = response.data;
+        console.log(
+          "[DEBUG] parsed data ➜",
+          JSON.stringify(data, null, 2) // 들여쓰기 2칸
+        );
+        let rawQA: unknown = data.answer_feedback;
+
+        // ③ answer-feedback 배열만 별도로 보고 싶다면
+        console.log(typeof data.answer_feedback);
+        console.table(rawQA); // 이제 정상 표 출력
+
+        // 문자열이면 파싱 시도
+        if (typeof rawQA === "string") {
+          try {
+            // 홑따옴표 → 쌍따옴표 교체 (완전한 JSON 규격은 아님에 주의)
+            const fixed = rawQA.replace(/'/g, '"');
+            rawQA = JSON.parse(fixed);
+          } catch (e) {
+            console.error("⚠️ answer_feedback 파싱 실패", e);
+            rawQA = []; // 실패했으면 빈 배열로라도 세팅
+          }
+        }
 
         setReportData({
-          //   resume: data.resume,
           overallFeedback: data.overall_feedback,
           behaviorFeedback: data.behavior_feedback,
-          answerFeedback: data.answer_feedback,
-          questionPairs: data.qna_pair || [],
-          videoUrl: data.video_url ?? "", // ← 추가
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          answerFeedback: toQAItems(rawQA as any),
+          videoUrl: data.video_url ?? "",
         });
       } catch (error) {
         console.error("📛 결과 조회 실패:", error);
@@ -73,7 +117,7 @@ const ArchivedReportPage = () => {
           />
         );
       case "question":
-        return <QuestionReport items={reportData.questionFeedback} />;
+        return <QuestionReport items={reportData.answerFeedback} />;
       case "behavior":
         return <BehaviorReport feedback={reportData.behaviorFeedback} />;
       default:
