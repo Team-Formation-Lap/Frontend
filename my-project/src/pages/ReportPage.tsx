@@ -22,7 +22,10 @@ export interface QAItem {
 
 // 2) reportData 전체 구조 정의
 interface ReportData {
-  comprehensiveFeedback: string;
+  comprehensiveFeedback: {
+    content: string;
+    scores: number[];
+  };
   questionFeedback: QAItem[];
   behaviorFeedback: string;
   videoUrl: string;
@@ -31,7 +34,10 @@ const ReportPage = () => {
   const location = useLocation();
   const interviewId = location.state?.interviewId;
   const [reportData, setReportData] = useState<ReportData>({
-    comprehensiveFeedback: "",
+    comprehensiveFeedback: {
+      content: "",
+      scores: [],
+    },
     questionFeedback: [],
     behaviorFeedback: "",
     videoUrl: "",
@@ -66,7 +72,10 @@ const ReportPage = () => {
         console.log("API response:", response.data);
         const rawQA = response.data.feedback["답변피드백"] ?? [];
         setReportData({
-          comprehensiveFeedback: response.data.feedback["종합피드백"] || "",
+          comprehensiveFeedback: {
+            content: response.data.feedback["종합피드백"].content || "",
+            scores: response.data.feedback["종합피드백"].scores || [],
+          },
           questionFeedback: toQAItems(rawQA),
           behaviorFeedback: response.data.feedback["행동피드백"] || "",
           videoUrl: response.data.video_url || "",
@@ -84,7 +93,8 @@ const ReportPage = () => {
       case "comprehensive":
         return (
           <ComprehensiveReport
-            feedback={reportData.comprehensiveFeedback}
+            feedback={reportData.comprehensiveFeedback.content}
+            interviewScores={reportData.comprehensiveFeedback.scores}
             videoUrl={reportData.videoUrl}
           />
         );

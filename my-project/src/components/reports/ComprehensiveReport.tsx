@@ -27,13 +27,14 @@ Chart.register(
 interface ComprehensiveReportProps {
   feedback: string;
   videoUrl: string;
+  interviewScores: number[];
 }
 const ComprehensiveReport = ({
   feedback,
   videoUrl,
+  interviewScores,
 }: ComprehensiveReportProps) => {
   // 실제 점수 데이터(0~100)를 API 호출 등으로 받아오면 여기서 상태 관리할것
-  const interviewScores = [15, 17, 18, 10, 15];
   const { nickname } = useAuthStore();
 
   return (
