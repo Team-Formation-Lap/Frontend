@@ -16,12 +16,16 @@ export interface QAItem {
   answer: string;
   feedback: string[];
 }
-
+// 타입 단언 (예상 구조)
 // 2) reportData 전체 구조 정의
 interface ReportData {
-  overallFeedback: string;
+  overallFeedback: {
+    content: string;
+    scores: number[];
+  };
   answerFeedback: QAItem[];
-  behaviorFeedback: string;
+  behaviorData: { start: string; actions: string[] }[];
+  behaviorSummary: string;
   videoUrl: string;
 }
 
@@ -34,8 +38,12 @@ const ArchivedReportPage = () => {
   console.log("create_at", { create_at });
 
   const [reportData, setReportData] = useState<ReportData>({
-    overallFeedback: "",
-    behaviorFeedback: "",
+    overallFeedback: {
+      content: "",
+      scores: [],
+    },
+    behaviorData: [],
+    behaviorSummary: "",
     answerFeedback: [],
     videoUrl: "",
   });
@@ -92,9 +100,41 @@ const ArchivedReportPage = () => {
           }
         }
 
+        const feedbackArray = data.overall_feedback;
+        const contentObj = feedbackArray.find(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (item: any) => typeof item.content === "string"
+        );
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const scoreObj = feedbackArray.find((item: any) =>
+          Array.isArray(item.score)
+        );
+
+        const content = contentObj?.content || "";
+        const scores = scoreObj?.score || [];
+
+        console.log("📘 종합 피드백 내용 (content):", content);
+        console.log("📊 종합 피드백 점수 (scores):", scores);
+        const { behavior_data, feedback_data } = data.behavior_feedback;
+
+        // feedback_data는 문자열이므로 다시 JSON 파싱 필요
+        let parsedFeedbackText = "";
+
+        try {
+          const fixed = feedback_data.replace(/'/g, '"'); // 홑따옴표 → 쌍따옴표
+          const parsed = JSON.parse(fixed);
+          parsedFeedbackText = parsed.feedback_data; // ✅ 여기서 최종 피드백 추출
+        } catch (e) {
+          console.error("⚠️ feedback_data 파싱 실패", e);
+        }
+
         setReportData({
-          overallFeedback: data.overall_feedback,
-          behaviorFeedback: data.behavior_feedback,
+          overallFeedback: {
+            content,
+            scores,
+          },
+          behaviorData: behavior_data,
+          behaviorSummary: parsedFeedbackText, // ✅ 여기에 최종 피드백 넣기
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           answerFeedback: toQAItems(rawQA as any),
           videoUrl: data.video_url ?? "",
@@ -112,14 +152,21 @@ const ArchivedReportPage = () => {
       case "comprehensive":
         return (
           <ComprehensiveReport
-            feedback={reportData.overallFeedback}
+            feedback={reportData.overallFeedback.content}
+            interviewScores={reportData.overallFeedback.scores}
             videoUrl={reportData.videoUrl}
           />
         );
       case "question":
         return <QuestionReport items={reportData.answerFeedback} />;
       case "behavior":
-        return <BehaviorReport feedback={reportData.behaviorFeedback} />;
+        return (
+          <BehaviorReport
+            behaviorData={reportData.behaviorData}
+            feedback={reportData.behaviorSummary}
+            videoUrl={reportData.videoUrl}
+          />
+        );
       default:
         return null;
     }
