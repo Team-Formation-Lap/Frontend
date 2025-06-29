@@ -103,7 +103,12 @@ const ReportPage = () => {
         return <QuestionReport items={reportData.questionFeedback} />;
       // return <QuestionReport_design />;
       case "behavior":
-        return <BehaviorReport feedback={reportData.behaviorFeedback} />;
+        return (
+          <BehaviorReport
+            feedback={reportData.behaviorFeedback}
+            videoUrl={reportData.videoUrl}
+          />
+        );
       // return <BehaviorReport_design />;
       default:
         return null;

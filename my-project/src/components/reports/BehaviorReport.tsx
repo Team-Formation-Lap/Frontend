@@ -25,7 +25,7 @@ const BehaviorReport = ({
           <video
             controls
             src={videoUrl}
-            className="w-full h-96  rounded-md shadow flex "
+            className="w-full h-120  rounded-md shadow flex "
           />
         ) : (
           <div className="text-gray-500">비디오가 없습니다.</div>
