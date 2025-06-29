@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 *storybook.log
+
+localhost-cert.pem
+localhost-key.pem
