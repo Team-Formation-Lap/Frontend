@@ -27,3 +27,4 @@ dist-ssr
 
 localhost-cert.pem
 localhost-key.pem
+package-lock.json
