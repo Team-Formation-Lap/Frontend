@@ -17,13 +17,18 @@ const BehaviorReport_design = () => {
       bold: "손을 갑자기 움직이면",
       text: "면접관이 산만하게 느낄 수 있습니다. 제스처는 천천히, 그리고 명확하게 사용하는 것이 좋습니다.",
     },
+    {
+      time: "07:42",
+      bold: "시선을 자주 돌리면",
+      text: "집중력이 부족해 보일 수 있습니다. 질문을 듣고 대답할 때는 면접관의 눈을 자연스럽게 바라보는 것이 좋습니다.",
+    },
   ];
 
   return (
-    <div className="bg-white mx-8 my-8 py-4 shadow-md rounded-md ">
-      <div className="p-4 space-y-6 mx-12">
+    <div className="py-4 mx-8 my-8 bg-white rounded-md shadow-md ">
+      <div className="flex justify-center p-4 mx-12 space-y-6 px-auto">
         {/* 영상 플레이어 */}
-        <div className="w-full mb-6">
+        <div className="flex justify-center w-[50rem] mb-6">
           <video
             className="w-full rounded-md"
             controls
@@ -33,15 +38,16 @@ const BehaviorReport_design = () => {
             사용 중인 브라우저는 비디오 태그를 지원하지 않습니다.
           </video>
         </div>
-        <h3 className="text-lg font-semibold mb-4">AI 피드백</h3>
-        <ul className="space-y-4">
+        <ul className="mx-10 space-y-4">
           {feedbackList.map((item, index) => (
             <li
               key={index}
-              className="border-t pt-4 first:border-t-0 first:pt-0"
+              className="pt-4 border-t first:border-t-0 first:pt-0"
             >
+              <h3 className="mb-4 text-lg font-semibold">AI 피드백</h3>
+
               <div className="flex items-start">
-                <button className="flex-shrink-0 bg-gray-100 border-dotted border text-black font-bold px-3 py-1 rounded-full mr-4 ">
+                <button className="flex-shrink-0 px-3 py-1 mr-4 font-bold text-black bg-gray-100 border border-dotted rounded-full ">
                   {item.time}
                 </button>
                 <p className="text-sm leading-relaxed">
