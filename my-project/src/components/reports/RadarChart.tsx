@@ -23,6 +23,7 @@ export default function RadarChart({ interview }: Props) {
         borderColor: "rgba(30,136,229,1)",
         borderWidth: 1,
         pointRadius: 0,
+        pointHitRadius: 10,
       },
     ],
   };
@@ -53,7 +54,7 @@ export default function RadarChart({ interview }: Props) {
 
         labels: { usePointStyle: true, boxWidth: 10 },
       },
-      tooltip: { enabled: false },
+      tooltip: { enabled: true },
     },
   };
 

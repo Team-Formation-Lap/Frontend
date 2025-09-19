@@ -38,20 +38,20 @@ const questionData = [
 
 const QuestionReport_design = () => {
   return (
-    <div className="bg-white mx-8 my-8 py-4 shadow-md rounded-md ">
+    <div className="flex flex-col items-center justify-center mx-8 my-8 bg-white rounded-md shadow-md">
       {questionData.map((q) => (
-        <div key={q.id} className="p-4 space-y-6 mx-12">
+        <div key={q.id} className="p-4 mx-12 space-y-6 w-[70rem]">
           {/* 질문 */}
           <div className="bg-[rgb(112,103,193)] px-4 py-3 mx-16 rounded-2xl text-white font-semibold tracking-wider">
             {q.question}
           </div>
 
           {/* 답변 + 피드백 통합 박스 */}
-          <div className="bg-gray-50 p-6 mx-20 rounded-md border border-gray-200 space-y-4">
+          <div className="p-6 mx-20 space-y-4 border border-gray-200 rounded-md bg-gray-50">
             {/* 답변 */}
             <div>
-              <h3 className="font-semibold text-gray-800 mb-2">답변</h3>
-              <p className="text-gray-700 leading-relaxed">{q.answer}</p>
+              <h3 className="mb-2 font-semibold text-gray-800">답변</h3>
+              <p className="leading-relaxed text-gray-700">{q.answer}</p>
             </div>
 
             {/* 구분선 */}
@@ -59,8 +59,8 @@ const QuestionReport_design = () => {
 
             {/* 피드백 */}
             <div>
-              <h3 className="font-semibold text-gray-800 mb-2">AI 피드백</h3>
-              <ul className="list-disc list-inside text-gray-700 space-y-1">
+              <h3 className="mb-2 font-semibold text-gray-800">AI 피드백</h3>
+              <ul className="space-y-1 text-gray-700 list-disc list-inside">
                 {q.feedback.map((f, index) => (
                   <li key={index}>{f}</li>
                 ))}
