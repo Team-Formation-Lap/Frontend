@@ -1,6 +1,6 @@
 import Modal from "./Modal";
 import { useLogin } from "../../hooks/useLogin";
-// import { useState } from "react";
+import useAuthStore from "../../store/authStore";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -9,16 +9,25 @@ interface LoginModalProps {
 }
 
 const LoginModal = ({ isOpen, onClose, onSignupClick }: LoginModalProps) => {
-  const { email, password, setEmail, setPassword, login } = useLogin();
+  const { email, password, setEmail, setPassword, login, loading, errorMessage } = useLogin();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   const handleLogin = async () => {
     await login();
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      onClose(); // 로그인 성공 시 모달 닫기
+    
+    // 로그인 성공 시 모달 닫기 (Zustand 스토어의 isLoggedIn 상태 확인)
+    if (useAuthStore.getState().isLoggedIn) {
+      onClose();
+      alert("로그인 되었습니다!");
     }
-    alert("로그인 되었습니다!");
   };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !loading) {
+      handleLogin();
+    }
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} width="w-[500px]" height="h-auto">
       <div className="text-center font-museo space-y-6 px-4 py-6">
@@ -44,6 +53,8 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }: LoginModalProps) => {
               className="mt-1 w-full px-4 py-2 bg-gray-100 rounded-md text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5C3BFF]"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onKeyPress={handleKeyPress}
+              disabled={loading}
             />
           </div>
 
@@ -57,15 +68,24 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }: LoginModalProps) => {
               className="mt-1 w-full px-4 py-2 bg-gray-100 rounded-md text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5C3BFF]"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyPress={handleKeyPress}
+              disabled={loading}
             />
           </div>
+
+          {errorMessage && (
+            <div className="text-red-500 text-sm text-center bg-red-50 p-2 rounded-md">
+              {errorMessage}
+            </div>
+          )}
         </div>
 
         <button
-          className="w-full bg-[#5C3BFF] text-white py-2 rounded-full font-semibold hover:bg-[#4b2fe6] transition"
+          className="w-full bg-[#5C3BFF] text-white py-2 rounded-full font-semibold hover:bg-[#4b2fe6] transition disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={handleLogin}
+          disabled={loading || !email || !password}
         >
-          로그인
+          {loading ? "로그인 중..." : "로그인"}
         </button>
 
         <p className="text-sm text-gray-500">
@@ -73,6 +93,7 @@ const LoginModal = ({ isOpen, onClose, onSignupClick }: LoginModalProps) => {
           <button
             onClick={onSignupClick}
             className="text-[#5C3BFF] font-semibold hover:underline ml-2"
+            disabled={loading}
           >
             회원가입
           </button>

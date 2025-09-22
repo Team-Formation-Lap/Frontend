@@ -29,18 +29,29 @@ export const useLogin = () => {
       const data = await res.json();
       console.log("📦 응답 데이터:", data);
 
-      const token = data.access;
-      const userId = data.userId;
-      const nickname = data.nickname;
-      // ✅ 콘솔 출력 추가
-      console.log("✅ 로그인 성공");
-      console.log("🔐 Access Token:", token);
-      console.log("👤 User ID:", userId);
-      console.log("👤 Nickname:", nickname);
+      // 백엔드 응답에서 userId가 없다면 임시로 생성 (백엔드 수정 전까지)
+      const loginData = {
+        access: data.access,
+        refresh: data.refresh,
+        userId: data.userId || Date.now(), // 임시 userId (백엔드에서 제공될 때까지)
+        nickname: data.nickname,
+        email: data.email,
+      };
 
-      login(token, userId, nickname);
-      localStorage.setItem("accessToken", token);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      console.log("✅ 로그인 성공");
+      console.log("🔐 Access Token:", loginData.access);
+      console.log("🔄 Refresh Token:", loginData.refresh);
+      console.log("👤 User ID:", loginData.userId);
+      console.log("👤 Nickname:", loginData.nickname);
+      console.log("📧 Email:", loginData.email);
+
+      // Zustand 스토어에 모든 데이터 저장
+      login(loginData);
+
+      // 이메일과 패스워드 초기화
+      setEmail("");
+      setPassword("");
+      
     } catch (err: any) {
       console.error("❌ 로그인 에러:", err.message);
       setErrorMessage(err.message || "로그인 실패");
