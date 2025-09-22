@@ -5,6 +5,8 @@ import useInterviewStore from "../store/useInterviewStore";
 import useWebSocket from "../hooks/useWebSocket";
 import useAudioRecorder from "../hooks/useAudioRecorder";
 import useVideoRecorder from "../hooks/useVideoRecorder";
+import useUploadInterviewVideo from "../hooks/useUploadInterviewVideo";
+import useAutoInterviewEnd from "../hooks/useAutoInterviewEnd";
 
 import InterviewHeader from "../components/headers/InterviewHeader";
 import VirtualInterviewer from "../components/VirtualInterviewer";
@@ -18,8 +20,19 @@ const InterviewPage = () => {
   } | null>(null);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  const { interviewId, setInterviewId, recording, setLoading, isLoading } =
-    useInterviewStore();
+  const { 
+    interviewId, 
+    setInterviewId, 
+    recording, 
+    setLoading, 
+    isLoading,
+    answerCount,
+    maxAnswers,
+    incrementAnswerCount,
+    resetAnswerCount,
+    socket,
+    hasAutoEnded,
+  } = useInterviewStore();
 
   const { startRecording, stopRecording } = useAudioRecorder();
   const {
@@ -29,6 +42,24 @@ const InterviewPage = () => {
     videoChunksRef,
   } = useVideoRecorder();
 
+  // 기존 면접 종료 훅 (버튼 클릭 시 사용하던 로직)
+  const { uploading, uploadVideo } = useUploadInterviewVideo(
+    videoChunksRef,
+    interviewId!,
+    stopVideoRecording,
+    socket
+  );
+
+  // 자동 종료 훅 (기존 uploadVideo 함수 재사용)
+  const { shouldAutoEnd, remainingAnswers } = useAutoInterviewEnd({
+    uploadVideo,
+  });
+
+  // 면접 시작 시 답변 횟수 초기화
+  useEffect(() => {
+    resetAnswerCount();
+  }, [resetAnswerCount]);
+
   // 면접 ID 설정
   useEffect(() => {
     const id = Number(location.state?.interviewId || null);
@@ -36,7 +67,7 @@ const InterviewPage = () => {
   }, [location, setInterviewId]);
 
   // 웹소켓 연결 & 메시지 처리
-  const { socket, isConnected } = useWebSocket(
+  const { socket: wsSocket, isConnected } = useWebSocket(
     virtualInterviewerRef,
     currentAudioRef,
     true
@@ -51,7 +82,7 @@ const InterviewPage = () => {
 
   // 메시지 수신 시 로딩 해제
   useEffect(() => {
-    if (!socket) return;
+    if (!wsSocket) return;
 
     const handleMessage = (event: MessageEvent) => {
       try {
@@ -64,15 +95,15 @@ const InterviewPage = () => {
       }
     };
 
-    socket.addEventListener("message", handleMessage);
+    wsSocket.addEventListener("message", handleMessage);
     return () => {
-      socket.removeEventListener("message", handleMessage);
+      wsSocket.removeEventListener("message", handleMessage);
     };
-  }, [socket, setLoading]);
+  }, [wsSocket, setLoading]);
 
   // 웹소켓 상태에 따른 로딩 처리
   useEffect(() => {
-    if (!socket) return;
+    if (!wsSocket) return;
 
     const handleOpen = () => {
       console.log("✅ 웹소켓 연결 성공!");
@@ -87,16 +118,16 @@ const InterviewPage = () => {
       console.log("🔌 웹소켓 연결 종료");
     };
 
-    socket.addEventListener("open", handleOpen);
-    socket.addEventListener("error", handleError);
-    socket.addEventListener("close", handleClose);
+    wsSocket.addEventListener("open", handleOpen);
+    wsSocket.addEventListener("error", handleError);
+    wsSocket.addEventListener("close", handleClose);
 
     return () => {
-      socket.removeEventListener("open", handleOpen);
-      socket.removeEventListener("error", handleError);
-      socket.removeEventListener("close", handleClose);
+      wsSocket.removeEventListener("open", handleOpen);
+      wsSocket.removeEventListener("error", handleError);
+      wsSocket.removeEventListener("close", handleClose);
     };
-  }, [socket, setLoading]);
+  }, [wsSocket, setLoading]);
 
   // 영상 녹화 시작
   useEffect(() => {
@@ -106,26 +137,44 @@ const InterviewPage = () => {
     }
   }, [videoRecording, startVideoRecording]);
 
-  // 답변 시작 시 로딩 상태 설정
+  // 답변 시작
   const handleStartRecording = () => {
+    if (shouldAutoEnd || hasAutoEnded) {
+      alert('면접이 종료되었습니다.');
+      return;
+    }
     startRecording();
   };
 
-  // 답변 종료 시 로딩 상태 유지
+  // 답변 종료 - 답변 횟수 증가
   const handleStopRecording = () => {
+    if (hasAutoEnded) {
+      return; // 이미 자동 종료된 경우 무시
+    }
+    
     stopRecording();
     setLoading(true);
+    
+    // 답변 완료 시 횟수 증가
+    incrementAnswerCount();
+    
+    console.log(`✅ ${answerCount + 1}번째 답변 완료`);
   };
 
   return (
     <div className="flex flex-col h-screen">
       {/* 로딩 오버레이 */}
-      {isLoading && (
+      {(isLoading || uploading) && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]">
           <div className="flex flex-col items-center">
             <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
             <p className="mt-4 text-white text-lg">
-              질문을 생성하고 있습니다...
+              {uploading
+                ? "면접영상 업로드 중..." 
+                : shouldAutoEnd || hasAutoEnded
+                ? "면접을 종료하고 있습니다..." 
+                : "질문을 생성하고 있습니다..."
+              }
             </p>
           </div>
         </div>
@@ -148,6 +197,32 @@ const InterviewPage = () => {
           <WebcamFeed />
         </div>
 
+        {/* 답변 진행 상황 표시 */}
+        <div 
+          style={{ 
+            position: "fixed", 
+            top: 100, 
+            left: 20, 
+            zIndex: 1000,
+            backgroundColor: "rgba(0,0,0,0.7)",
+            color: "white",
+            padding: "10px 15px",
+            borderRadius: "8px",
+            fontSize: "14px"
+          }}
+        >
+          {shouldAutoEnd || hasAutoEnded ? (
+            <span className="text-yellow-300">🎉 면접 완료! 종료 중...</span>
+          ) : (
+            <span>
+              📝 진행 상황: {answerCount}/{maxAnswers} 
+              {remainingAnswers > 0 && (
+                <span className="text-blue-300"> (남은 답변: {remainingAnswers}개)</span>
+              )}
+            </span>
+          )}
+        </div>
+
         {/* 헤더 */}
         <div
           style={{
@@ -162,7 +237,7 @@ const InterviewPage = () => {
             <InterviewHeader
               interviewId={interviewId}
               stopVideoRecording={stopVideoRecording}
-              socket={socket}
+              socket={wsSocket}
               videoChunksRef={videoChunksRef}
             />
           )}
@@ -170,19 +245,35 @@ const InterviewPage = () => {
 
         {/* 녹음 버튼 */}
         <div style={{ position: "fixed", bottom: 20, right: 20, zIndex: 1100 }}>
-          {!recording ? (
+          {shouldAutoEnd || hasAutoEnded ? (
+            // 자동 종료 상태일 때
+            <div className="text-center">
+              <div className="px-5 py-2 bg-yellow-600 text-white rounded-lg text-lg font-semibold mb-2">
+                🎉 면접 완료!
+              </div>
+              <div className="text-sm text-gray-600">
+                잠시만 기다려주세요...
+              </div>
+            </div>
+          ) : !recording ? (
             <button
               onClick={handleStartRecording}
               className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-lg font-semibold transition flex items-center gap-x-2"
+              disabled={uploading}
             >
               🎤 <span>답변하기</span>
+              {remainingAnswers > 0 && (
+                <span className="text-sm">({remainingAnswers}개 남음)</span>
+              )}
             </button>
           ) : (
             <button
               onClick={handleStopRecording}
               className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-lg font-semibold transition flex items-center gap-x-2"
+              disabled={uploading || hasAutoEnded}
             >
               ⏹ <span>답변마치기</span>
+              <span className="text-sm">({answerCount + 1}/{maxAnswers})</span>
             </button>
           )}
         </div>
